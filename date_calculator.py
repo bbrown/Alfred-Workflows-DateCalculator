@@ -204,7 +204,7 @@ def valid_command_format(command_format):
     :return: true if valid
     """
     repeats_search = Counter(command_format)
-    repeated_items = filter(lambda x: x > 1, repeats_search.values())
+    repeated_items = list(filter(lambda x: x > 1, repeats_search.values()))
 
     if len(repeated_items) == 0:
         return True

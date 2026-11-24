@@ -324,7 +324,7 @@
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>python date_format_list.py</string>
+				<string>/usr/bin/python3 date_format_list.py</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -353,7 +353,7 @@
 				<key>escaping</key>
 				<integer>126</integer>
 				<key>script</key>
-				<string>python set_date_format.py "{query}"</string>
+				<string>/usr/bin/python3 set_date_format.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -376,7 +376,7 @@
 				<key>escaping</key>
 				<integer>126</integer>
 				<key>script</key>
-				<string>python show_date_format.py</string>
+				<string>/usr/bin/python3 show_date_format.py</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -451,7 +451,7 @@
 				<key>runningsubtext</key>
 				<string>Calculating . . .</string>
 				<key>script</key>
-				<string>python date_calculator.py "{query}"</string>
+				<string>/usr/bin/python3 date_calculator.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -497,7 +497,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalc {query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalc {query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -562,7 +562,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>python set_anniversary.py "{query}"</string>
+				<string>/usr/bin/python3 set_anniversary.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -585,7 +585,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalcset list delete {query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalcset list delete {query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -626,7 +626,7 @@
 				<key>runningsubtext</key>
 				<string>Please wait . . .</string>
 				<key>script</key>
-				<string>python anniversary_list.py "{query}"</string>
+				<string>/usr/bin/python3 anniversary_list.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -655,7 +655,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalcset list edit {query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalcset list edit {query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -678,7 +678,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalc {query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalc {query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -701,7 +701,7 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalc ^{query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalc ^{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -724,7 +724,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalcshow list {query}"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalcshow list {query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -747,7 +747,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>tell application "Alfred 3" to search "dcalc date"</string>
+				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalc date"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -809,7 +809,7 @@
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>python time_format_list.py</string>
+				<string>/usr/bin/python3 time_format_list.py</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -838,7 +838,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>python set_time_format.py "{query}"</string>
+				<string>/usr/bin/python3 set_time_format.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -903,7 +903,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>python show_time_format.py</string>
+				<string>/usr/bin/python3 show_time_format.py</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -960,7 +960,7 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>python set_date_time_format.py "{query}"</string>
+				<string>/usr/bin/python3 set_date_time_format.py "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -1001,7 +1001,7 @@
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>python date_time_format_list.py</string>
+				<string>/usr/bin/python3 date_time_format_list.py</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -1538,7 +1538,7 @@ THE SOFTWARE.</string>
 		</dict>
 	</dict>
 	<key>version</key>
-	<string>3.3</string>
+	<string>4.0</string>
 	<key>webaddress</key>
 	<string>http://muppetgate.github.io/pages/date-calculator-help-page.html</string>
 </dict>

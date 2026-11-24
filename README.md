@@ -7,6 +7,11 @@ Right, so this is a date calculator – kind of. It won’t tell you when you wi
 
 (Download from [Packal.org](http://www.packal.org/workflow/date-calculator))
 
+### Requirements
+- Alfred 6 with the Powerpack
+- macOS 12 or later
+- Python 3 at `/usr/bin/python3`, which comes with Apple's Command Line Tools. If they're missing, macOS offers to install them the first time the workflow runs.
+
 For example, if you enter
 
 **dcalc 25.12.14 - 18.01.14**
@@ -225,6 +230,8 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
+(Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
+
 (Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month.
 
 (Version 2.4) - Bugt fixes. Added abbreviations. Added functions for Pancake Day, Lent and Martin Luther King Day
