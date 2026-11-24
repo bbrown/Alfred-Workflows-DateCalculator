@@ -4,7 +4,6 @@ from __future__ import unicode_literals, print_function
 import sys
 
 from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
-from versioning import update_settings
 from workflow import Workflow, MATCH_STARTSWITH
 from dateutil import parser
 
@@ -22,7 +21,6 @@ def filter_names(name):
 def main(wf):
     # Get the date format from the configuration
 
-    update_settings(wf)
     args = wf.args
 
     key = wf.settings['date-format']

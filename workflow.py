@@ -36,8 +36,7 @@ class Settings(dict):
 class Workflow:
     def __init__(self, default_settings=None):
         self.args = [unicodedata.normalize('NFC', a) for a in sys.argv[1:]]
-        self.settings = Settings(os.path.join(os.environ['alfred_workflow_data'], 'settings.json'),
-                                 default_settings or {})
+        self.default_settings = default_settings or {}
         self._items = []
 
     def add_item(self, title, subtitle='', arg=None, valid=False, icon=None):
@@ -56,6 +55,9 @@ class Workflow:
 
     def run(self, func):
         try:
+            # loaded here, not in __init__, so a broken settings.json shows as an error row in Alfred
+            self.settings = Settings(os.path.join(os.environ['alfred_workflow_data'], 'settings.json'),
+                                     self.default_settings)
             func(self)
             return 0
         except Exception as e:
@@ -77,13 +79,23 @@ if __name__ == '__main__':  # self-check: python3 workflow.py
         defaults = {'anniversaries': {'xmas': '1900-12-25T00:00:00'}}
         wf = Workflow(default_settings=defaults)
         assert wf.args == ['caf\xe9']
-        wf.settings['anniversaries']['bday'] = '2000-01-01T00:00:00'
-        wf.settings['anniversaries'] = wf.settings['anniversaries']
+
+        def add_bday(w):
+            w.settings['anniversaries']['bday'] = '2000-01-01T00:00:00'
+            w.settings['anniversaries'] = w.settings['anniversaries']
+        assert wf.run(add_bday) == 0
         assert defaults['anniversaries'] == {'xmas': '1900-12-25T00:00:00'}  # defaults not mutated
-        assert Workflow().settings == wf.settings  # saved and reloaded
+        wf2 = Workflow()
+        assert wf2.run(lambda _: None) == 0 and wf2.settings == wf.settings  # saved and reloaded
         assert wf.filter('X', ['xmas', 'bday']) == ['xmas']
-        out = io.StringIO()
-        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
-            assert wf.run(lambda _: 1 / 0) == 1
-        assert json.loads(out.getvalue())['items'][0]['subtitle'] == 'division by zero'
+
+        def run_capture(w, func):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+                assert w.run(func) == 1
+            return json.loads(out.getvalue())['items'][0]['subtitle']
+        assert run_capture(wf, lambda _: 1 / 0) == 'division by zero'
+        with open(os.path.join(data_dir, 'settings.json'), 'w') as f:
+            f.write('')  # broken settings file still produces an error row
+        assert run_capture(Workflow(), lambda _: None).startswith('Expecting value')
     print('workflow.py self-check passed')

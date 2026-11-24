@@ -3,7 +3,6 @@ import sys
 
 from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
 from utils import convert_date_time
-from versioning import update_settings
 from workflow import Workflow
 from macros_parser import MacrosParser
 
@@ -51,9 +50,6 @@ def delete_anniversary(anniversaries, command, wf):
 
 def main(wf):
     # Get the date format from the configuration
-
-    update_settings(wf)
-
     key = wf.settings['date-format']
     args = wf.args
 

@@ -12,7 +12,6 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rruleset, rrule, DAILY
 from humanfriendly import *
 from utils import convert_date_time
-from versioning import update_settings
 from workflow import Workflow, ICON_ERROR
 
 
@@ -332,7 +331,6 @@ def normalised_days(command, date_time_1, date_time_2):
 def main(wf):
     # Get the date format from the configuration
 
-    update_settings(wf)
     args = wf.args
     command_parser = DateParser(wf.settings)
 

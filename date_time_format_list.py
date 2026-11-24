@@ -2,7 +2,6 @@ from __future__ import unicode_literals, print_function
 
 import sys
 from arrow.arrow import datetime
-from versioning import update_settings
 
 from workflow import Workflow
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, DATE_TIME_MAPPINGS, DATE_MAPPINGS, TIME_MAPPINGS
@@ -15,10 +14,6 @@ def get_formatted_key(current_date_time, key, settings):
 
 
 def main(wf):
-    # We've added a new setting so we need t
-    # to set up the default the first time it is run
-    update_settings(wf)
-
     # Get the current setting
     current_setting = wf.settings['date-time-format']
 
