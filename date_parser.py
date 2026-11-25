@@ -78,7 +78,8 @@ class DateParser:
 
     @staticmethod
     def _get_exclusion_macros():
-        return '|'.join(re.escape(str(x)) for x in EXCLUSION_MAP.keys())
+        # a name may not run on into more letters, so "sat" can't match the start of "saturdays"
+        return '|'.join(re.escape(x) + '(?![a-z_])' for x in EXCLUSION_MAP)
 
     def parse_command(self, command_string):
         class Operator(str):

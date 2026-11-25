@@ -100,4 +100,8 @@ utils.date = real_date
 # Excluding days works when a time is typed (27.11.26 is a Friday)
 assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
 
+# Each exclusion's day names match its rule, and a long name isn't read as a shorter one
+assert dcalc('27.11.26 + 1d x exsun sundays') == 'All days excluded'
+assert dcalc('27.11.26 + 1d x saturdays') == '29.11.26'
+
 print('test_dates.py self-check passed')

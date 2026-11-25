@@ -272,152 +272,27 @@ DATE_FUNCTION_MAP = {
     "mutter": mothers_day_us
 }
 
-# Note that the 'days' are not arrays; they're sets --> curly braces
-EXCLUSION_MAP = {
+_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-    "weekdays":
 
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR))},
+def _exclude(day_numbers):
+    """An exclusion: its day names, for the "all days excluded" check, and the rule that finds those days."""
+    by_weekday = [(MO, TU, WE, TH, FR, SA, SU)[n] for n in day_numbers]
+    return {'days': {_WEEKDAYS[n] for n in day_numbers},
+            'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=by_weekday)}
 
-    "wkdy":
 
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR))},
+def _exclusion_map():
+    workdays, weekend = range(5), range(5, 7)
+    days_by_name = {'weekdays': workdays, 'wkdy': workdays, 'weekends': weekend, 'wknd': weekend,
+                    'all except weekdays': weekend, 'xwkdy': weekend,
+                    'all except weekends': workdays, 'xwknd': workdays}
+    for n, day in enumerate(_WEEKDAYS):
+        name, short, others = day.lower(), day[:3].lower(), [d for d in range(7) if d != n]
+        days_by_name[name + 's'] = days_by_name[short] = [n]
+        # the short "except" forms for Saturday and Sunday have always been exsat and exsun
+        days_by_name['all except ' + name + 's'] = days_by_name[('ex' if n >= 5 else 'x') + short] = others
+    return {exclusion: _exclude(days) for exclusion, days in days_by_name.items()}
 
-    "weekends":
-        {'days': {'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(SA, SU))},
 
-    "wknd":
-        {'days': {'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(SA, SU))},
-
-    "mondays":
-        {'days': {'Monday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=MO)},
-
-    "mon":
-        {'days': {'Monday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=MO)},
-
-    "tuesdays":
-        {'days': {'Tuesday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=TU)},
-
-    "tue":
-        {'days': {'Tuesday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=TU)},
-
-    "wednesdays":
-        {'days': {'Wednesday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=WE)},
-
-    "wed":
-        {'days': {'Wednesday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=WE)},
-
-    "thursdays":
-        {'days': {'Thursday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=TH)},
-
-    "thu":
-        {'days': {'Thursday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=TH)},
-
-    "fridays":
-        {'days': {'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=FR)},
-
-    "fri":
-        {'days': {'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=FR)},
-
-    "saturdays":
-        {'days': {'Saturday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=SA)},
-
-    "sat":
-        {'days': {'Saturday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=SA)},
-
-    "sundays":
-        {'days': {'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=SU)},
-
-    "sun":
-        {'days': {'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=SU)},
-
-    "all except weekdays":
-        {'days': {'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(SA, SU))},
-
-    "xwkdy":
-        {'days': {'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(SA, SU))},
-
-    "all except weekends":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR))},
-
-    "xwknd":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR))},
-
-    "all except mondays":
-        {'days': {'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(TU, WE, TH, FR, SA, SU))},
-
-    "xmon":
-        {'days': {'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(TU, WE, TH, FR, SA, SU))},
-
-    "all except tuesdays":
-        {'days': {'Monday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, WE, TH, FR, SA, SU))},
-
-    "xtue":
-        {'days': {'Monday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, WE, TH, FR, SA, SU))},
-
-    "all except wednesdays":
-        {'days': {'Monday', 'Tuesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, TH, FR, SA, SU))},
-
-    "xwed":
-        {'days': {'Monday', 'Tuesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, TH, FR, SA, SU))},
-
-    "all except thursdays":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, FR, SA, SU))},
-
-    "xthu":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, FR, SA, SU))},
-
-    "all except fridays":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, SA, SU))},
-
-    "xfri":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Saturday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, SA, SU))},
-
-    "all except saturdays":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR, SU))},
-
-    "exsat":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR, SU))},
-
-    "all except sundays":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR, SA))},
-
-    "exsun":
-        {'days': {'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sunday'},
-         'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=(MO, TU, WE, TH, FR, SA))}
-}
+EXCLUSION_MAP = _exclusion_map()
