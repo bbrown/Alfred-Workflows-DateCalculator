@@ -187,9 +187,8 @@ def calculate_rrule_exclusions(start_date, end_date, exclusion_commands, setting
             # raise an error or something
             raise UnknownExclusionTypeError
 
-    matched_dates = list(exclusion_ruleset.between(after=start_date, before=end_date, inc=True))
-
-    return len(matched_dates)
+    # start_date was counted by the previous window, so count only the days after it
+    return len([d for d in exclusion_ruleset.between(start_date, end_date, inc=True) if d > start_date])
 
 
 def valid_command_format(command_format):
