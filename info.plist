@@ -934,7 +934,9 @@ This is a date calculator – kind of. It won’t tell you when you’ll win the
 - Python 3.8 or later at `/usr/bin/python3`, which comes with Apple's Command Line Tools. If they're missing, macOS offers to install them the first time the workflow runs.
 
 ### Installing
-Build the workflow file from a clone of this repository, then double-click it to add it to Alfred:
+Download _DateCalculator.alfredworkflow_ from the [latest release](https://github.com/bbrown/Alfred-Workflows-DateCalculator/releases/latest), then double-click it to add it to Alfred. Earlier versions are on the [releases page](https://github.com/bbrown/Alfred-Workflows-DateCalculator/releases).
+
+Or build the workflow file yourself from a clone of this repository, then double-click it:
 
     git archive --format=zip -o DateCalculator.alfredworkflow HEAD
 
