@@ -1,0 +1,103 @@
+"""Self-check for the date maths: /usr/bin/python3 test_dates.py
+
+Each check is a case that once gave a wrong answer. The dates are fixed, so the checks don't depend on today.
+"""
+import contextlib
+import copy
+import io
+from datetime import date, datetime, timedelta
+
+import date_calculator
+import date_functions
+import set_anniversary
+import utils
+from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS
+
+
+class FakeWorkflow:
+    """Just enough of workflow.Workflow for a script's main(): one query in, the first item's text out."""
+
+    def __init__(self, query, settings):
+        self.args, self.settings, self.items = [query], settings, []
+
+    def add_item(self, title, subtitle='', arg=None, valid=False, icon=None):
+        self.items.append(title if valid else subtitle)
+
+    def send_feedback(self):
+        pass
+
+
+def settings(**changes):
+    result = copy.deepcopy(DEFAULT_WORKFLOW_SETTINGS)
+    result.update(changes)
+    return result
+
+
+def dcalc(query, workflow_settings=None):
+    wf = FakeWorkflow(query, workflow_settings or settings())
+    date_calculator.main(wf)
+    return wf.items[0]
+
+
+def dcalcset_list(query, workflow_settings):
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        set_anniversary.main(FakeWorkflow(query, workflow_settings))
+    return out.getvalue().strip()
+
+
+# Holiday dates sit at the end of the day, like typed dates, so countdowns aren't a day short
+for name in ('easter', 'passover', 'end year', 'mom'):
+    assert utils.convert_date_time(name, settings())[0].time() == datetime.max.time(), name
+
+# Decimals use the real lengths of years and months
+assert dcalc('20.12.26 - 01.01.26 y') == '0.97 years'
+assert dcalc('31.01.26 - 01.01.26 m') == '0.97 months'
+
+# Months are counted without drifting after a short month, so md agrees with long
+assert dcalc('30.03.26 - 31.01.26 md') == '1 month, 30 days'
+
+# Seconds show when the format asks for them, and a long span in seconds answers at once
+assert dcalc('09:00 - 17:30 s') == '30600 seconds'
+assert dcalc('01.01.00 - 01.01.26 s') == '820540800 seconds'
+
+# Anniversary names have one spelling, and mistakes give a message instead of a crash
+four_digit_years = settings(**{'date-format': 'dd.mm.yyyy'})
+assert dcalcset_list('add Christmas 01.01.2000', four_digit_years) == 'christmas already exists'
+assert four_digit_years['anniversaries']['christmas'] == DEFAULT_WORKFLOW_SETTINGS['anniversaries']['christmas']
+assert dcalcset_list('delete nosuch', four_digit_years) == 'nosuch does not exist'
+assert dcalcset_list('add newone', four_digit_years) == 'Invalid Date'
+
+# A name that starts another name doesn't hide it
+for added in ('bday 03.03.1990', 'bdaytwo 04.04.1991', 'mum_bday 01.02.1950'):
+    assert dcalcset_list('add ' + added, four_digit_years).endswith(' added'), added
+assert dcalc('^bdaytwo', four_digit_years) == '04.04.1991'
+assert dcalc('mum_bday', four_digit_years).startswith('01.02.')  # its next 1 February
+first_of_next_month = (date.today().replace(day=1) + timedelta(days=32)).replace(day=1)
+assert dcalc('next month') == first_of_next_month.strftime('%d.%m.%y')
+assert dcalc('*wd') in ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN')
+assert dcalc('+1d', settings(anniversaries={})) == 'Invalid Command'
+real_current_date = date_functions._get_current_date
+date_functions._get_current_date = lambda: datetime(2026, 12, 15, 23, 59, 59, 999999)
+assert date_functions.next_month(settings())[0].date() == date(2027, 1, 1)
+date_functions._get_current_date = real_current_date
+
+# Week numbers: capitals, subtraction, and the ISO year around New Year
+assert dcalc('wn 2015 5 SUN') == '01.02.15'
+assert dcalc('wn 2015 5 sun - 08.02.15') == '1 week'
+
+
+class December29(date):  # 29.12.2025 is in ISO week 1 of 2026
+    @classmethod
+    def today(cls):
+        return cls(2025, 12, 29)
+
+
+real_date, utils.date = utils.date, December29
+assert utils.get_date_from_week_number('wn') == date(2025, 12, 29)
+utils.date = real_date
+
+# Excluding days works when a time is typed (27.11.26 is a Friday)
+assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
+
+print('test_dates.py self-check passed')
