@@ -24,7 +24,8 @@ class DateParser:
         self.date_formatters_re = re.compile(self._get_date_formatters(), re.IGNORECASE)
 
         # This is for the exclusions
-        self.exclusion_keyword_re = re.compile(r'exclude|ex|x')
+        # a whole word, so "xmon" typed without the keyword isn't read as "x mon"
+        self.exclusion_keyword_re = re.compile(r'(?:exclude|ex|x)(?![a-z_])')
         self.exclusion_macro_re = re.compile(self._get_exclusion_macros(), re.IGNORECASE)
         self.exclusion_range_operator_re = re.compile(r'to|until', re.IGNORECASE)
 

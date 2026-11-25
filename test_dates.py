@@ -107,6 +107,10 @@ assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
 assert dcalc('27.11.26 + 1d x exsun sundays') == 'All days excluded'
 assert dcalc('27.11.26 + 1d x saturdays') == '29.11.26'
 
+# The exclude keyword is a whole word: "xmon" without it isn't read as "x mon" (exclude Mondays)
+assert dcalc('24.11.26 + 5d xmon') == 'Invalid Command'
+assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
+
 # Alfred's help (the readme in info.plist) is a copy of README.md, so they can't drift apart
 here = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(here, 'info.plist'), 'rb') as plist, open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
