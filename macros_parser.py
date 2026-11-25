@@ -1,4 +1,3 @@
-from __future__ import unicode_literals, print_function
 import re
 from date_parser import DateParser
 from pypeg2 import List, attr, parse, optional

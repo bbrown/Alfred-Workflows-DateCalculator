@@ -1,6 +1,3 @@
-# -- coding: utf-8 --
-
-from __future__ import unicode_literals, print_function
 import sys
 
 from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS

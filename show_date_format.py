@@ -1,7 +1,5 @@
 # This file is for displaying the user's
 # currently selected time format
-from __future__ import unicode_literals, print_function
-
 import sys
 
 from workflow import Workflow
