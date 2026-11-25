@@ -9,7 +9,6 @@ import dateutil.parser
 
 
 # package for general utility stuff
-from isoweek import Week
 from parsedatetime import parsedatetime
 
 
@@ -76,31 +75,14 @@ def natural_parser(date_time, settings):
 
 
 def get_date_from_week_number(date_time):
-    week_day_map = {0: "mon", 1: "tue", 2: "wed", 3: "thu", 4: "fri", 5: "sat", 6: "sun"}
-
-    current_date = date.today()
-
+    # defaults come from the ISO calendar, whose year differs from the calendar year around New Year
+    iso_year, iso_week, iso_day = date.today().isocalendar()
     match = re.match(WN_FUNCTION_REGEX, date_time)
-
-    if match.group('year') is not None:
-        year = int(match.group('year'))
-    else:
-        year = current_date.year
-
-    if match.group('week_number') is not None:
-        week_number = int(match.group('week_number'))
-    else:
-        week_number = int(current_date.strftime("%V"))
-
-    if match.group('day') is not None:
-        day = match.group('day')
-    else:
-        day = week_day_map[current_date.weekday()]
-
-    w = Week(year, week_number)
-
-    func = getattr(w, DAYS_OF_WEEK_ABBREVIATIONS[day], "sunday")
-    return func()
+    year = int(match.group('year') or iso_year)
+    week_number = int(match.group('week_number') or iso_week)
+    day = match.group('day')
+    week_day = list(DAYS_OF_WEEK_ABBREVIATIONS).index(day.lower()) + 1 if day else iso_day  # Monday is 1
+    return date.fromisocalendar(year, week_number, week_day)
 
 
 # noinspection PyCallingNonCallable
@@ -118,7 +100,7 @@ def convert_date_time(date_time, settings):
 
     #How about a date from a week number and a year
     if date_time.startswith("wn"):
-        return get_date_from_week_number(date_time), date_format
+        return datetime.combine(get_date_from_week_number(date_time), datetime.max.time()), date_format
 
     date_time_str = str(date_time)
 
