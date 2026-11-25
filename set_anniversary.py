@@ -19,7 +19,7 @@ def add_anniversary(anniversaries, command, date_mapping, wf):
     else:
         date_time, output_format = convert_date_time(command.dateTime, wf.settings)
         anniversary_date = date_time.isoformat()
-        anniversaries[command.anniversaryName.lower()] = anniversary_date
+        anniversaries[command.anniversaryName] = anniversary_date
         wf.settings["anniversaries"] = anniversaries
         output = "{anniversaryName} added".format(anniversaryName=command.anniversaryName)
     return output
@@ -35,13 +35,16 @@ def change_anniversary(anniversaries, command, date_mapping, wf):
     else:
         date_time, output_format = convert_date_time(command.dateTime, wf.settings)
         anniversary_date = date_time.isoformat()
-        anniversaries[command.anniversaryName.lower()] = anniversary_date
+        anniversaries[command.anniversaryName] = anniversary_date
         wf.settings["anniversaries"] = anniversaries
         output = "{anniversaryName} changed".format(anniversaryName=command.anniversaryName)
     return output
 
 
 def delete_anniversary(anniversaries, command, wf):
+    if command.anniversaryName not in anniversaries:
+        return "{anniversaryName} does not exist".format(anniversaryName=command.anniversaryName)
+
     del anniversaries[command.anniversaryName]
     wf.settings["anniversaries"] = anniversaries
     output = "{anniversaryName} deleted".format(anniversaryName=command.anniversaryName)
@@ -65,6 +68,8 @@ def main(wf):
     try:
 
         command = command_parser.parse_command(args[0])
+        # names are saved in lower case, so check and delete them that way too
+        command.anniversaryName = command.anniversaryName.lower()
 
         if hasattr(command, "anniversaryName") and hasattr(command, "add") and hasattr(command, "dateTime"):
 

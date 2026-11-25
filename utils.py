@@ -113,7 +113,7 @@ def convert_date_time(date_time, settings):
     full_format = get_full_format(settings)
 
     # Okay, Does the date command start with a " symbol?
-    if date_time[0] == "\"":
+    if date_time.startswith('"'):
         return natural_parser(date_time, settings)
 
     #How about a date from a week number and a year
