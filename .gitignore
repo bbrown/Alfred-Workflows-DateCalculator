@@ -61,3 +61,6 @@ target/
 # idea stuff
 .idea
 
+
+# Built from the source when needed: git archive --format=zip -o DateCalculator.alfredworkflow HEAD
+*.alfredworkflow
