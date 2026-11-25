@@ -1,7 +1,6 @@
 from collections import Counter
 from datetime import timedelta
 
-import arrow
 from arrow.arrow import datetime
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, \
     TIME_CALCULATION, VALID_FORMAT_OPTIONS, MAX_LOOKAHEAD_ATTEMPTS
@@ -217,33 +216,23 @@ def tack_on_time(date_time):
 
 def calculate_time_interval(interval, start_datetime, end_datetime):
     """
-    So how does this work. Well, as it turns out, trying use division by seconds to get
-    the intervals is the wrong way to do it. The problem is the uneven months and leapyears
-    leads to inaccuracies. So this is the new way of doing it.
-    Use the rrule to get a list of all the dates that fall inside the given range. If you count
-    the dates (whether the frequency is YEARLY, MONTHLY, WEEKLY etc.) then the count will tell
-    you how many intervals fall inside the range. Here's the clever bit: the last date inside
-    the range is kind of your remainder. Set that to the start date for the next calculation and
-    you pick up at the starting poing where the last count ended!
-    Note. We knock one of the count because rrule includes the date you're counting from in the list,
-    which you don't really want.
-    :param interval: The interval we're calculating over: year, month, week, day, hour, minute or second.
-    :param start_datetime: When you're counting from
-    :param end_datetime:  When you're counting to.
-    :return:
+    Counts the whole intervals (year, month, week, day, hour, minute or second) from start to end.
+    Returns the count and the date-time where the last whole interval ends, which is where the
+    next, smaller interval carries on counting.
     """
+    if interval in ('year', 'month'):  # uneven lengths, so count them from the start, without drift
+        delta = relativedelta(end_datetime, start_datetime)
+        count = delta.years if interval == 'year' else delta.years * 12 + delta.months
+        return count, start_datetime + relativedelta(**{interval + 's': count})
 
-    datetime_list = arrow.Arrow.range(interval, start_datetime, end_datetime)
-
-    if datetime_list:
-        return len(datetime_list) - 1, datetime_list[-1]
-    else:
-        return 0, start_datetime
+    step = timedelta(**{interval + 's': 1})
+    count = (end_datetime - start_datetime) // step
+    return count, start_datetime + count * step
 
 
 def later_date_last(date_time_1, date_time_2):
     """
-    The rrule is fussy about the order of the dates: the lower one
+    The interval counting is fussy about the order of the dates: the lower one
     has to go first. But we don't force our users to always put the
     higher date first, so this method will flip them if expression
     is entered incorrectly.
@@ -289,10 +278,7 @@ def normalised_days(command, date_time_1, date_time_2):
     # appear in the calculation. If they're out of sequence
     # then the calculation will return the wrong result.
     # And it does matter which way round the dates go.
-    date_1, date_2 = later_date_last(date_time_1, date_time_2)
-
-    start_date_time = arrow.get(date_1)
-    end_date_time = arrow.get(date_2)
+    start_date_time, end_date_time = later_date_last(date_time_1, date_time_2)
 
     if command.format:
         ordered_format_options = [option for option in VALID_FORMAT_OPTIONS if option in command.format]
