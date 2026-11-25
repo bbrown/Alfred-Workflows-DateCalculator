@@ -562,9 +562,9 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>script</key>
-				<string>/usr/bin/python3 set_anniversary.py "{query}"</string>
+				<string>/usr/bin/python3 set_anniversary.py "$1"</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
@@ -626,9 +626,9 @@
 				<key>runningsubtext</key>
 				<string>Please wait . . .</string>
 				<key>script</key>
-				<string>/usr/bin/python3 anniversary_list.py "{query}"</string>
+				<string>/usr/bin/python3 anniversary_list.py "$1"</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
