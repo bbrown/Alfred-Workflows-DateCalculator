@@ -8,7 +8,6 @@ from date_formatters import DATE_FORMATTERS_MAP
 from date_functions import EXCLUSION_MAP
 from date_parser import DateParser
 from dateutil.relativedelta import relativedelta
-from dateutil.rrule import rruleset, rrule, DAILY
 from utils import convert_date_time
 from workflow import Workflow, ICON_ERROR
 
@@ -111,22 +110,24 @@ def exclusion_check(original_date_time, date_time, command, settings):
     if len(exclusion_day_set) >= 7:
         raise ExclusionNoDaysFoundError
 
+    # taking days away moves back in time, so each excluded day pushes the answer further back
+    step = timedelta(days=1 if date_time >= original_date_time else -1)
     starting_date_time = original_date_time
     lookahead_date = date_time
     lookahead_count = 0
 
-    extra_days = calculate_rrule_exclusions(starting_date_time, lookahead_date, command.exclusionCommands, settings)
+    extra_days = count_excluded_days(starting_date_time, lookahead_date, command.exclusionCommands, settings)
 
     while extra_days > 0:
 
         starting_date_time = lookahead_date
-        lookahead_date = lookahead_date + timedelta(days=extra_days)
+        lookahead_date = lookahead_date + extra_days * step
         lookahead_count = lookahead_count + 1
 
         if lookahead_count >= MAX_LOOKAHEAD_ATTEMPTS:
             raise ExclusionTooFarAheadError
 
-        extra_days = calculate_rrule_exclusions(starting_date_time, lookahead_date, command.exclusionCommands, settings)
+        extra_days = count_excluded_days(starting_date_time, lookahead_date, command.exclusionCommands, settings)
 
     return lookahead_date
 
@@ -139,34 +140,37 @@ def build_exclusion_day_set(exclusion_commands):
     for exclusionType in exclusion_types:
 
         if hasattr(exclusionType, "exclusionMacro"):
-            excluded_days.update(EXCLUSION_MAP[exclusionType.exclusionMacro]['days'])
+            excluded_days.update(EXCLUSION_MAP[exclusionType.exclusionMacro])
 
     return excluded_days
 
 
-def calculate_rrule_exclusions(start_date, end_date, exclusion_commands, settings):
-    exclusion_ruleset = rruleset()
+def count_excluded_days(start_date, end_date, exclusion_commands, settings):
+    """
+    Counts the excluded days from start_date to end_date, in either direction. The day of start_date
+    doesn't count: the window before this one ended there, so it has been counted already.
+    """
+    weekdays, dates, ranges = set(), set(), []
 
-    exclusion_types = exclusion_commands.exclusionList
-
-    for exclusion_type in exclusion_types:
+    for exclusion_type in exclusion_commands.exclusionList:
 
         if hasattr(exclusion_type, "exclusionRange"):
             from_date, _ = convert_date_time(exclusion_type.exclusionRange.fromDateTime, settings)
             to_date, _ = convert_date_time(exclusion_type.exclusionRange.toDateTime, settings)
-            exclusion_ruleset.rrule(rrule(freq=DAILY, dtstart=from_date, until=to_date))
+            ranges.append((from_date.date(), to_date.date()))
 
         elif hasattr(exclusion_type, "exclusionDateTime"):
             real_date, _ = convert_date_time(exclusion_type.exclusionDateTime, settings)
-            exclusion_ruleset.rrule(rrule(freq=DAILY, dtstart=real_date, until=real_date))
+            dates.add(real_date.date())
 
         elif hasattr(exclusion_type, "exclusionMacro"):
-            macro_value = exclusion_type.exclusionMacro
-            exclusion_rule = EXCLUSION_MAP[macro_value]['rule'](start=start_date, end=end_date)
-            exclusion_ruleset.rrule(exclusion_rule)
+            weekdays.update(EXCLUSION_MAP[exclusion_type.exclusionMacro])
 
-    # start_date was counted by the previous window, so count only the days after it
-    return len([d for d in exclusion_ruleset.between(start_date, end_date, inc=True) if d > start_date])
+    # whole days, so a typed time can't move a day into or out of the window
+    first, last = sorted((start_date.date(), end_date.date()))
+    window = (first + timedelta(days=n) for n in range((last - first).days + 1))
+    return sum(1 for day in window if day != start_date.date() and
+               (day.weekday() in weekdays or day in dates or any(low <= day <= high for low, high in ranges)))
 
 
 def round_number(count):
@@ -333,7 +337,7 @@ def main(wf):
         output = "All days excluded"
 
     except ExclusionTooFarAheadError:
-        output = "That's too far into the future"
+        output = "That's too far away"
 
     if output.startswith("Invalid"):
         wf.add_item(title=". . .", subtitle=output, valid=False, arg=args[0], icon=ICON_ERROR)

@@ -107,6 +107,11 @@ assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
 assert dcalc('27.11.26 + 1d x exsun sundays') == 'All days excluded'
 assert dcalc('27.11.26 + 1d x saturdays') == '29.11.26'
 
+# Exclusions count whole days, backwards when taking days away, and a typed time can't land on an excluded date
+assert dcalc('24.11.26 - 5d x weekends') == '17.11.26'
+assert dcalc('30.11.26 - 1d x weekends') == '27.11.26'
+assert dcalc('27.11.26@10:00 + 3d x 30.11.26') == '01.12.26@10:00'
+
 # The exclude keyword is a whole word: "xmon" without it isn't read as "x mon" (exclude Mondays)
 assert dcalc('24.11.26 + 5d xmon') == 'Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'

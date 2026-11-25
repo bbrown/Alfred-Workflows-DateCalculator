@@ -222,7 +222,11 @@ As you might have guessed, this will give you the date 20 days from now, not cou
 
 **dcalc today + 3d x all except tuesdays**
 
-Exclusions only work when adding days. They don't work when subtracting one date from another.
+Exclusions work when taking days away, too. This gives the date 20 days ago, not counting weekends:
+
+**dcalc today - 20d x weekends**
+
+They don't work when subtracting one date from another.
 
 
 ## Abbreviations
@@ -277,11 +281,11 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
-(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
+(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again and now work when taking days away, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
 
 (Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
 
-(Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month. (Exclusions came back later, for adding days; see Exclusions above.)
+(Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month. (Exclusions came back later; see Exclusions above.)
 
 (Version 2.4) - Bugt fixes. Added abbreviations. Added functions for Pancake Day, Lent and Martin Luther King Day
 

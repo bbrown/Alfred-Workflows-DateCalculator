@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 # The DAY_MAP is specific to relative delta
 from date_format_mappings import DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS
 from dateutil.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
-from dateutil.rrule import rrule, YEARLY, DAILY
+from dateutil.rrule import rrule, YEARLY
 
 DAY_MAP = {
 
@@ -272,27 +272,17 @@ DATE_FUNCTION_MAP = {
     "mutter": mothers_day_us
 }
 
-_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
-
-def _exclude(day_numbers):
-    """An exclusion: its day names, for the "all days excluded" check, and the rule that finds those days."""
-    by_weekday = [(MO, TU, WE, TH, FR, SA, SU)[n] for n in day_numbers]
-    return {'days': {_WEEKDAYS[n] for n in day_numbers},
-            'rule': lambda start, end: rrule(freq=DAILY, dtstart=start, until=end, byweekday=by_weekday)}
-
-
 def _exclusion_map():
-    workdays, weekend = range(5), range(5, 7)
-    days_by_name = {'weekdays': workdays, 'wkdy': workdays, 'weekends': weekend, 'wknd': weekend,
-                    'all except weekdays': weekend, 'xwkdy': weekend,
-                    'all except weekends': workdays, 'xwknd': workdays}
-    for n, day in enumerate(_WEEKDAYS):
-        name, short, others = day.lower(), day[:3].lower(), [d for d in range(7) if d != n]
-        days_by_name[name + 's'] = days_by_name[short] = [n]
+    """Maps each exclusion word to the weekdays it excludes, numbered from Monday as 0."""
+    workdays, weekend = frozenset(range(5)), frozenset({5, 6})
+    exclusions = {'weekdays': workdays, 'wkdy': workdays, 'weekends': weekend, 'wknd': weekend,
+                  'all except weekdays': weekend, 'xwkdy': weekend,
+                  'all except weekends': workdays, 'xwknd': workdays}
+    for n, day in enumerate(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']):
+        exclusions[day + 's'] = exclusions[day[:3]] = frozenset({n})
         # the short "except" forms for Saturday and Sunday have always been exsat and exsun
-        days_by_name['all except ' + name + 's'] = days_by_name[('ex' if n >= 5 else 'x') + short] = others
-    return {exclusion: _exclude(days) for exclusion, days in days_by_name.items()}
+        exclusions['all except ' + day + 's'] = exclusions[('ex' if n >= 5 else 'x') + day[:3]] = frozenset(range(7)) - {n}
+    return exclusions
 
 
 EXCLUSION_MAP = _exclusion_map()
