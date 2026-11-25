@@ -313,8 +313,9 @@ def normalised_days(command, date_time_1, date_time_2):
         # items in the list are unique and sorted into order! If this changes
         # then you should use an enumerate call
         if x == ordered_format_options[-1]:
-            fractional = abs((end_date_time - start_date_time).total_seconds()) / TIME_CALCULATION[x]['seconds']
-            count += fractional
+            # a fraction of the real next interval, so months and years keep their true lengths
+            one = relativedelta(**{TIME_CALCULATION[x]['interval'] + 's': 1})
+            count += (end_date_time - start_date_time) / (start_date_time + one - start_date_time)
 
         # If no format is set then go for a compact display that suppresses all items that are
         # zero. And don't bother showing the seconds calculation under any circumstances. It is pretty
