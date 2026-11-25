@@ -5,12 +5,17 @@ Right, so this is a date calculator – kind of. It won’t tell you when you wi
 
 ![](http://www.packal.org/sites/default/files/public/workflow-files/muppetgatenetdatecalculator/screenshots/screenshot2014-06-21at084104.png)
 
-(Download from [Packal.org](http://www.packal.org/workflow/date-calculator))
-
 ### Requirements
 - Alfred 6 with the Powerpack
 - macOS 12 or later
-- Python 3 at `/usr/bin/python3`, which comes with Apple's Command Line Tools. If they're missing, macOS offers to install them the first time the workflow runs.
+- Python 3.8 or later at `/usr/bin/python3`, which comes with Apple's Command Line Tools. If they're missing, macOS offers to install them the first time the workflow runs.
+
+### Installing
+Build the workflow file from a clone of this repository, then double-click it to add it to Alfred:
+
+    git archive --format=zip -o DateCalculator.alfredworkflow HEAD
+
+An older version is on [Packal.org](http://www.packal.org/workflow/date-calculator).
 
 For example, if you enter
 
@@ -75,7 +80,7 @@ The **wn** function also works in reverse, finding dates from week numbers:
 
 **dcalc wn 2015 5**
 
-will give you the date for the fifth week inside for 2015. The expression will give you the date on Monday of that week, but you can also supply your own day adjustment if you want to.
+will give you the date for the fifth week inside for 2015. The expression will give you the date in that week for today's day of the week, but you can also supply your own day adjustment if you want to.
 
 **dcalc wn 2015 5 sun**
 
@@ -188,6 +193,37 @@ You can even combine it with the existing parser:
 
 This is a little bit experimental (I might drop it later if it proves to be problematic), but I thought I'd throw it in for a bit of a fun.
 
+## Exclusions
+Added at the request of a friend, though I'm not sure there's a lot of call for it. Okay, say you have 20 days to complete a project:
+
+**dcalc today + 20d**
+
+Not a problem, but hang on a mo – you don't like to work on weekends, so you'd better exclude them:
+
+**dcalc today + 20d exclude weekends**
+
+That'll skip weekends while counting the days. Fantastic! But hang on, the wife's birthday! You won't be working on that day if you know what's good for you:
+
+**dcalc today + 20d exclude weekends 26.09.14**
+
+Nicely saved, my friend; but there is still that small break you were planning in October:
+
+**dcalc today + 20d exclude weekends 26.09.14 05.10.14 to 10.10.14**
+
+Crap! You're also having a wisdom tooth removed next wednesday
+
+**dcalc today + 20d exclude weekends 26.09.14 05.10.14 to 10.10.14 next wed**
+
+Though I think you'll need more than a day to get over that. The _exclude_ keyword is a little verbose for the lightning typists, so you can also use _x_ instead:
+
+**dcalc today + 20d x weekends tuesdays**
+
+As you might have guessed, this will give you the date 20 days from now, not counting weekends and Tuesdays. We also have a very wordy variation which excludes every day except the one specified:
+
+**dcalc today + 3d x all except tuesdays**
+
+Exclusions only work when adding days. They don't work when subtracting one date from another.
+
 
 ## Abbreviations
 To speed up entering calculations, there are a couple of function abbreviations you can use within expressions:
@@ -216,6 +252,11 @@ And
 will give you the date six days from now.
 
 
+### Checking changes
+If you change the code, run the two self-checks. They need nothing but Python:
+
+    /usr/bin/python3 test_dates.py
+    /usr/bin/python3 workflow.py
 
 ### Credits
 A list of things that made my first attempt at Python programming possible:
@@ -230,9 +271,11 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
+(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again. Needs Python 3.8 or later.
+
 (Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
 
-(Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month.
+(Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month. (Exclusions came back later, for adding days; see Exclusions above.)
 
 (Version 2.4) - Bugt fixes. Added abbreviations. Added functions for Pancake Day, Lent and Martin Luther King Day
 
