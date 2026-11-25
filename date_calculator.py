@@ -304,9 +304,8 @@ def normalised_days(command, date_time_1, date_time_2):
             count += (end_date_time - start_date_time) / (start_date_time + one - start_date_time)
 
         # If no format is set then go for a compact display that suppresses all items that are
-        # zero. And don't bother showing the seconds calculation under any circumstances. It is pretty
-        # useless and prone to error.
-        if (show_zero_items or count > 0) and TIME_CALCULATION[x]['interval'] != 'second':
+        # zero, and leaves out seconds. Seconds only show when the format asks for them.
+        if show_zero_items or (count > 0 and TIME_CALCULATION[x]['interval'] != 'second'):
             normalised_elements.append(pluralize(round_number(count), TIME_CALCULATION[x]['singular'],
                                                  TIME_CALCULATION[x]['plural']))
 
