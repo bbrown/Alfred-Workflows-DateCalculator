@@ -123,7 +123,10 @@ def convert_date_time(date_time, settings):
     date_time_str = str(date_time)
 
     if date_time_str.lower() in DATE_FUNCTION_MAP.keys():
-        return DATE_FUNCTION_MAP[date_time_str.lower()](settings)
+        date_and_time, output_format = DATE_FUNCTION_MAP[date_time_str.lower()](settings)
+        if output_format == date_format:  # date-only results sit at the end of the day, like typed dates below
+            date_and_time = datetime.combine(date_and_time, datetime.max.time())
+        return date_and_time, output_format
 
     anniversary_date = process_macros(date_time_str.lower(), settings['anniversaries'])
 
