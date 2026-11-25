@@ -1,10 +1,12 @@
-"""Self-check for the date maths: /usr/bin/python3 test_dates.py
+"""Self-check for the date maths, and that Alfred's help matches the README: /usr/bin/python3 test_dates.py
 
 Each check is a case that once gave a wrong answer. The dates are fixed, so the checks don't depend on today.
 """
 import contextlib
 import copy
 import io
+import os
+import plistlib
 from datetime import date, datetime, timedelta
 
 import date_calculator
@@ -104,5 +106,10 @@ assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
 # Each exclusion's day names match its rule, and a long name isn't read as a shorter one
 assert dcalc('27.11.26 + 1d x exsun sundays') == 'All days excluded'
 assert dcalc('27.11.26 + 1d x saturdays') == '29.11.26'
+
+# Alfred's help (the readme in info.plist) is a copy of README.md, so they can't drift apart
+here = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(here, 'info.plist'), 'rb') as plist, open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    assert plistlib.load(plist)['readme'] == f.read(), "Alfred's help is out of date: run /usr/bin/python3 sync_readme.py"
 
 print('test_dates.py self-check passed')

@@ -1071,6 +1071,18 @@ Right, so this is a date calculator – kind of. It won’t tell you when you wi
 
 ![](http://www.packal.org/sites/default/files/public/workflow-files/muppetgatenetdatecalculator/screenshots/screenshot2014-06-21at084104.png)
 
+### Requirements
+- Alfred 6 with the Powerpack
+- macOS 12 or later
+- Python 3.8 or later at `/usr/bin/python3`, which comes with Apple's Command Line Tools. If they're missing, macOS offers to install them the first time the workflow runs.
+
+### Installing
+Build the workflow file from a clone of this repository, then double-click it to add it to Alfred:
+
+    git archive --format=zip -o DateCalculator.alfredworkflow HEAD
+
+An older version is on [Packal.org](http://www.packal.org/workflow/date-calculator).
+
 For example, if you enter
 
 **dcalc 25.12.14 - 18.01.14**
@@ -1114,7 +1126,7 @@ or combine ‘em
 **dcalc 18.12.12 + 5y 9d 3w - 2d + 1d 1w**
 
 What does that mess do?
-- Take the date 18.12.12
+- Take the date 18.12.12 
 - Add 5 years
 - Add another 9 days
 - Add another 3 weeks
@@ -1129,6 +1141,27 @@ If you want to know what week number you’re in, then try this:
 Or for a specific date:
 
 **dcalc 25.12.14 wn**
+
+The **wn** function also works in reverse, finding dates from week numbers:
+
+**dcalc wn 2015 5**
+
+will give you the date for the fifth week inside for 2015. The expression will give you the date in that week for today's day of the week, but you can also supply your own day adjustment if you want to.
+
+**dcalc wn 2015 5 sun**
+
+And of course, you can do some basic calculations, if you can stand the syntax!
+
+**dcalc wn 2015 6 tue +1d wd**
+
+Should give you the Tuesday for week 6 in the year 2015, then add 1 day to that and give back the day of week.
+Which is Wednesday, obviously :-)
+
+I've included defaults so that the workflow will fill in missing parameters:
+
+**dcalc wn 7**
+
+will return the date of the current day of week (Monday, as I'm writing this) for the seventh week of the current year.
 
 You can also use the _today_ thing in other places too:
 
@@ -1155,7 +1188,7 @@ Probably not all that useful, but some of this other stuff might be. You know al
 
 **dcalc now**
 
-For giving you the current time and date. While you can use
+For giving you the current time and date. While you can use 
 
 **dcalc tomorrow**
 
@@ -1181,7 +1214,7 @@ That about covers it, I think. I haven’t done anything clever with locales, bu
 
 **dcalcset date format**
 
-And we also support both 12-hour and 24-hour time formats.
+And we also support both 12-hour and 24-hour time formats. 
 
 **dcalcset time format**
 
@@ -1218,7 +1251,7 @@ or
 
 **dcalc "1 day after tomorrow"**
 
-Yup! A natural date language parser!
+Yup! A natural date language parser! 
 
 You can even combine it with the existing parser:
 
@@ -1258,6 +1291,45 @@ As you might have guessed, this will give you the date 20 days from now, not cou
 Exclusions only work when adding days. They don't work when subtracting one date from another.
 
 
+## Abbreviations
+To speed up entering calculations, there are a couple of function abbreviations you can use within expressions:
+
+
+**&lt;** yesterday
+
+**\*** today
+
+**\&gt;** tomorrow
+
+**&amp;** time
+
+**\#** now
+
+So now
+
+**dcalc \*** 
+
+will give you the current date.
+
+And
+
+**dcalc \*+6d**
+
+will give you the date six days from now.
+
+
+### Checking changes
+If you change the code, run the two self-checks. They need nothing but Python:
+
+    /usr/bin/python3 test_dates.py
+    /usr/bin/python3 workflow.py
+
+Alfred shows a copy of this README as the workflow's help, kept in `info.plist`. After editing the README, copy it there with:
+
+    /usr/bin/python3 sync_readme.py
+
+`test_dates.py` fails if the two copies differ.
+
 ### Credits
 A list of things that made my first attempt at Python programming possible:
 - Dean Jackson for his more-than-slightly awesome [Alfred Workflow framework](http://www.deanishe.net/alfred-workflow/), and for his ‘parse-as-you-type’ idea.
@@ -1271,29 +1343,40 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
-(Version 2.3) - Bug fixes. Reworked the auto formatting. You can now apply exclusions to date calculations as well as timespan calculations.
-Added function to return the date when given a year, a week number and an optional day of the week
+(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
+
+(Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
+
+(Version 2.7) - Removed the exclude stuff. It wasn't very reliable and was very hard to explain. Also fixed a problem which caused incorrect date calculuations if the input phrase was right at the end of  the month. (Exclusions came back later, for adding days; see Exclusions above.)
+
+(Version 2.4) - Bugt fixes. Added abbreviations. Added functions for Pancake Day, Lent and Martin Luther King Day
+
+(Version 2.3) - Bug fixes. Reworked the auto formatting. You can now apply exclusions to date calculations as well as timespan calculations. 
+Added function to return the date when given a year, a week number and an optional day of the week.
+
 (Version 2.1) - Bug fixes. Made the default formatting a little bit more intelligent.
+
 Latest release (Version 2.0). Refactoring. Added a natural date language parser. Added support for 12-hour clock. Added function to get date of the next passover
+
 Latest release (Version 1.6). Refactoring. Added exclusion functionality, and macros for _year start_ and _year end_. Changed the calls for days of the week: You now need to enter _next mon_ to get the date for next Monday, but you can also now type _prev mon_ to get the date for last Monday. Huzzah!
 Increased the accuracy of the date intervals. If you select _y_ for the date format then you will get _11.5 years_. But if you select _ym_ then you get _11 years, 6 months_. Trust me, it’s better this way.
 
-Latest release (Version 1.5). Refactoring. Rewrote the code for date subtraction arithmetic.
+Latest release (Version 1.5). Refactoring. Rewrote the code for date subtraction arithmetic. 
 Now it’s a lot more accurate, even when working with uneven months and weeks. Minor bug fixes.
 
-Last release (Version 1.4) Fixed bug that caused inaccuracies when calculating anniversaries.
+Last release (Version 1.4) Fixed bug that caused inaccuracies when calculating anniversaries. 
 Refactored code to make it easier to add new date functions and date formatters. General tidy-up
 
 Last release (Version 1.3) Adds extra formatting functions (day of week) and bug fixes.
 
 Last release (Version 1.2) was an improvement to add user-defined macros.
 
-Last release (Version 1.1) was on the 01.07.2014. This included a new anniversary list function,
+Last release (Version 1.1) was on the 01.07.2014. This included a new anniversary list function, 
 and the addition of the international date format (yyyy-mm-dd).
 
-Last release (Version 1.0) was on the 27.06.2014. This included an improved date parser,
-added macros (days of week, christmas and easter) and a general tidy up.
-The symbol for getting the week number for a particular date has changed
+Last release (Version 1.0) was on the 27.06.2014. This included an improved date parser, 
+added macros (days of week, christmas and easter) and a general tidy up. 
+The symbol for getting the week number for a particular date has changed 
 from ‘^’ to ‘!’ or ‘wn’. Why? Because I seemed to be struggling to find ‘^’ on the keyboard.
 
 ### License
@@ -1318,7 +1401,10 @@ FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</string>
+THE SOFTWARE.
+
+
+</string>
 	<key>uidata</key>
 	<dict>
 		<key>0B14F62B-EEC4-460E-A1B4-6DFF6705E5FA</key>

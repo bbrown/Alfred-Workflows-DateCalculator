@@ -258,6 +258,12 @@ If you change the code, run the two self-checks. They need nothing but Python:
     /usr/bin/python3 test_dates.py
     /usr/bin/python3 workflow.py
 
+Alfred shows a copy of this README as the workflow's help, kept in `info.plist`. After editing the README, copy it there with:
+
+    /usr/bin/python3 sync_readme.py
+
+`test_dates.py` fails if the two copies differ.
+
 ### Credits
 A list of things that made my first attempt at Python programming possible:
 - Dean Jackson for his more-than-slightly awesome [Alfred Workflow framework](http://www.deanishe.net/alfred-workflow/), and for his ‘parse-as-you-type’ idea.
@@ -271,7 +277,7 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
-(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again. Needs Python 3.8 or later.
+(Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
 
 (Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
 
