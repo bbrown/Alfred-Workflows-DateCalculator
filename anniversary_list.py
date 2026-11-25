@@ -4,7 +4,7 @@ from __future__ import unicode_literals, print_function
 import sys
 
 from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
-from workflow import Workflow, MATCH_STARTSWITH
+from workflow import Workflow
 from dateutil import parser
 
 
@@ -29,8 +29,7 @@ def main(wf):
     anniversaries = wf.settings["anniversaries"]
 
     if args[0]:
-        filtered_keys = wf.filter(query=args[0], items=anniversaries.keys(),
-                                  key=filter_names, match_on=MATCH_STARTSWITH)
+        filtered_keys = wf.filter(query=args[0], items=anniversaries.keys(), key=filter_names)
     else:
         filtered_keys = anniversaries.keys()
 

@@ -1,8 +1,8 @@
 from __future__ import unicode_literals, print_function
-from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, WN_FUNCTION_REGEX
+from date_format_mappings import WN_FUNCTION_REGEX
 from date_formatters import DATE_FORMATTERS_MAP
 from date_functions import DATE_FUNCTION_MAP, get_date_format_regex, get_time_format_regex, get_full_format_regex, \
-    DAYS_OF_WEEK_ABBREVIATIONS, EXCLUSION_MAP
+    EXCLUSION_MAP
 
 from pypeg2 import *
 
@@ -73,10 +73,6 @@ class DateParser:
         return '|'.join(re.escape(x) + ('(?![a-z_])' if x[-1].isalpha() else '') for x in DATE_FUNCTION_MAP)
 
     @staticmethod
-    def _get_week_days():
-        return '|'.join(re.escape(str(x)) for x in DAYS_OF_WEEK_ABBREVIATIONS.keys())
-
-    @staticmethod
     def _get_exclusion_macros():
         # a name may not run on into more letters, so "sat" can't match the start of "saturdays"
         return '|'.join(re.escape(x) + '(?![a-z_])' for x in EXCLUSION_MAP)
@@ -144,12 +140,3 @@ class DateParser:
             ]
 
         return parse(command_string, Commands)
-
-
-if __name__ == '__main__':
-    command_parser = DateParser(DEFAULT_WORKFLOW_SETTINGS)
-    command = command_parser.parse_command("27.01.14 - 01.01.14 + 1d")
-    print(command.dateTime)
-    print(command.operandList[0].operator)
-    print(command.operandList[0].timeSpans[0].amount)
-    print(command.operandList[0].timeSpans[0].span)

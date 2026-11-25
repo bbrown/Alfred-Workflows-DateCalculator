@@ -56,7 +56,6 @@ DEFAULT_TIME_FORMAT = '24-hour'
 DEFAULT_DATE_TIME_FORMAT = '@'
 
 VALID_FORMAT_OPTIONS = ["y", "m", "w", "d", "h", "M", "s"]
-VALID_WORD_FORMAT_OPTIONS = ["long"]
 
 TIME_CALCULATION = {
 

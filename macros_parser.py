@@ -1,6 +1,5 @@
 from __future__ import unicode_literals, print_function
 import re
-from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS
 from date_parser import DateParser
 from pypeg2 import List, attr, parse, optional
 
@@ -41,13 +40,3 @@ class MacrosParser(DateParser):
             ]
 
         return parse(command_string, Commands)
-
-
-if __name__ == '__main__':
-    command_parser = MacrosParser(DEFAULT_WORKFLOW_SETTINGS)
-
-    command = command_parser.parse_command("helen del")
-    print(command.anniversaryName)
-    #print(command.dateTime)
-
-

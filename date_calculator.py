@@ -1,6 +1,6 @@
 import sys
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, \
     TIME_CALCULATION, VALID_FORMAT_OPTIONS, MAX_LOOKAHEAD_ATTEMPTS
@@ -18,23 +18,6 @@ class FormatError(Exception):
     Throw this when there are
     repeated characters in the
     format field.
-    """
-    pass
-
-
-class IncompatibleFunctionError(Exception):
-    """
-    Throw this bad boy when someone attempts
-    to use the exclusions with the formatting.
-    """
-    pass
-
-
-class UnknownExclusionTypeError(Exception):
-    """
-    This exception is thrown when we encounter an exclusion type that
-    somehow makes it through the checking list. Shouldn't occur really,
-    but if it does then we want to know about it.
     """
     pass
 
@@ -181,10 +164,6 @@ def calculate_rrule_exclusions(start_date, end_date, exclusion_commands, setting
             macro_value = exclusion_type.exclusionMacro
             exclusion_rule = EXCLUSION_MAP[macro_value]['rule'](start=start_date, end=end_date)
             exclusion_ruleset.rrule(exclusion_rule)
-        else:
-            # in that case, I have no idea what this is (the parser should have caught it) so just
-            # raise an error or something
-            raise UnknownExclusionTypeError
 
     # start_date was counted by the previous window, so count only the days after it
     return len([d for d in exclusion_ruleset.between(start_date, end_date, inc=True) if d > start_date])
@@ -215,10 +194,6 @@ def valid_command_format(command_format):
         return True
     else:
         return False
-
-
-def tack_on_time(date_time):
-    return datetime.combine(date_time, datetime.max.time())
 
 
 def calculate_time_interval(interval, start_datetime, end_datetime):
@@ -353,12 +328,6 @@ def main(wf):
 
     except FormatError:
         output = "Invalid format"
-
-    except IncompatibleFunctionError:
-        output = "Invalid command - Don't use exclusions and formats together."
-
-    except UnknownExclusionTypeError:
-        output = "Invalid exclusion - Try again."
 
     except ExclusionNoDaysFoundError:
         output = "All days excluded"

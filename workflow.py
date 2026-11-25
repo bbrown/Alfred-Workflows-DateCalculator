@@ -11,7 +11,6 @@ import traceback
 import unicodedata
 
 ICON_ERROR = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertStopIcon.icns'
-MATCH_STARTSWITH = 1  # the only match mode the scripts use
 
 
 class Settings(dict):
@@ -50,7 +49,7 @@ class Workflow:
     def send_feedback(self):
         json.dump({'items': self._items}, sys.stdout)
 
-    def filter(self, query, items, key=lambda x: x, match_on=MATCH_STARTSWITH):
+    def filter(self, query, items, key=lambda x: x):
         return [i for i in items if key(i).lower().startswith(query.lower())]
 
     def run(self, func):
