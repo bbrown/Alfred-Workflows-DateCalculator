@@ -2,7 +2,7 @@
 # uses for specialised dates.
 from math import floor
 
-from arrow.arrow import datetime, timedelta
+from datetime import datetime, timedelta
 # The DAY_MAP is specific to relative delta
 from date_format_mappings import DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS
 from dateutil.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU

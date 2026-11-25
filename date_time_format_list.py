@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, print_function
 
 import sys
-from arrow.arrow import datetime
+from datetime import datetime
 
 from workflow import Workflow
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, DATE_TIME_MAPPINGS, DATE_MAPPINGS, TIME_MAPPINGS

@@ -53,6 +53,7 @@ for name in ('easter', 'passover', 'end year', 'mom'):
 # Decimals use the real lengths of years and months
 assert dcalc('20.12.26 - 01.01.26 y') == '0.97 years'
 assert dcalc('31.01.26 - 01.01.26 m') == '0.97 months'
+assert dcalc('01.07.27 - 01.01.26 y') == '1.5 years'
 
 # Months are counted without drifting after a short month, so md agrees with long
 assert dcalc('30.03.26 - 31.01.26 md') == '1 month, 30 days'

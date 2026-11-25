@@ -1,7 +1,7 @@
+import sys
 from collections import Counter
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from arrow.arrow import datetime
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, \
     TIME_CALCULATION, VALID_FORMAT_OPTIONS, MAX_LOOKAHEAD_ATTEMPTS
 from date_formatters import DATE_FORMATTERS_MAP
@@ -9,7 +9,6 @@ from date_functions import EXCLUSION_MAP
 from date_parser import DateParser
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import rruleset, rrule, DAILY
-from humanfriendly import *
 from utils import convert_date_time
 from workflow import Workflow, ICON_ERROR
 
@@ -189,6 +188,15 @@ def calculate_rrule_exclusions(start_date, end_date, exclusion_commands, setting
 
     # start_date was counted by the previous window, so count only the days after it
     return len([d for d in exclusion_ruleset.between(start_date, end_date, inc=True) if d > start_date])
+
+
+def round_number(count):
+    """At most two decimal places, without trailing zeros: 1.50 gives '1.5' and 2.00 gives '2'."""
+    return ('%.2f' % count).rstrip('0').rstrip('.')
+
+
+def pluralize(count, singular, plural):
+    return '%s %s' % (count, singular if float(count) == 1 else plural)
 
 
 def valid_command_format(command_format):
