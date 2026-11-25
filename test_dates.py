@@ -1,4 +1,4 @@
-"""Self-check for the date maths, and that Alfred's help matches the README: /usr/bin/python3 test_dates.py
+"""Self-check for the date maths, and that info.plist matches the README and code: /usr/bin/python3 test_dates.py
 
 Each check is a case that once gave a wrong answer. The dates are fixed, so the checks don't depend on today.
 """
@@ -13,7 +13,9 @@ import date_calculator
 import date_functions
 import set_anniversary
 import utils
-from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS
+from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS
+
+MAPPINGS = {'date-format': DATE_MAPPINGS, 'time-format': TIME_MAPPINGS, 'date-time-format': DATE_TIME_MAPPINGS}
 
 
 class FakeWorkflow:
@@ -119,6 +121,13 @@ assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 # Alfred's help (the readme in info.plist) is a copy of README.md, so they can't drift apart
 here = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(here, 'info.plist'), 'rb') as plist, open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-    assert plistlib.load(plist)['readme'] == f.read(), "Alfred's help is out of date: run /usr/bin/python3 sync_readme.py"
+    info = plistlib.load(plist)
+    assert info['readme'] == f.read(), "Alfred's help is out of date: run /usr/bin/python3 sync_readme.py"
+
+# the Configure Workflow pickers offer exactly the formats the code knows, with the same defaults
+for item in info['userconfigurationconfig']:
+    key = item['variable'].replace('_', '-')
+    assert item['config']['default'] == DEFAULT_WORKFLOW_SETTINGS[key], key
+    assert sorted(value for _, value in item['config']['pairs']) == sorted(MAPPINGS[key]), key
 
 print('test_dates.py self-check passed')

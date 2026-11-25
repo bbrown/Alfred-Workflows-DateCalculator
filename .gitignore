@@ -64,3 +64,6 @@ target/
 
 # Built from the source when needed: git archive --format=zip -o DateCalculator.alfredworkflow HEAD
 *.alfredworkflow
+
+# Alfred saves Configure Workflow choices here
+prefs.plist

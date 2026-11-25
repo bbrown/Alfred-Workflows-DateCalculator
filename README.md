@@ -158,6 +158,8 @@ You can also set the combined date and time format using:
 
 **dcalcset date and time format**
 
+The same three settings are also in Alfred Preferences: open the workflow and click _Configure Workflow_. Changing a setting in either place changes it in both.
+
 If you’re ever puzzled by _invalid command_ or _invalid expression_ errors, then start with the settings; they might be set incorrectly.
 
 Oh, almost forgot.
@@ -281,6 +283,8 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
+(Version 4.2) - The date, time and date‑and‑time formats are now in _Configure Workflow_ as well as the _dcalcset_ keywords. The _dcalcshow date format_ and _dcalcshow time format_ keywords are gone, because the lists mark the current choice with a *. Formats chosen in an earlier version go back to the defaults, so pick them again once. Anniversaries are kept.
+
 (Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again and now work when taking days away, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
 
 (Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.

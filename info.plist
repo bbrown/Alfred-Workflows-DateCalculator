@@ -136,32 +136,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>78DDDF2F-629A-4313-95EE-1BB4A7AB3C4A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>C0DB0242-54B1-475E-A327-B61C54C7B668</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>8BB3905A-8C58-4F09-B871-9CF756226504</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>5F6FEA98-E805-408A-A1F4-A8A5FC49DC81</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>8F4747B0-FA9D-4FCB-B828-4B37602854B5</key>
 		<array>
 			<dict>
@@ -180,19 +154,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>8F4747B0-FA9D-4FCB-B828-4B37602854B5</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>BFDF2A5E-8F79-4B66-9297-4FC3A926B30A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>8BB3905A-8C58-4F09-B871-9CF756226504</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -245,19 +206,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>0B14F62B-EEC4-460E-A1B4-6DFF6705E5FA</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>FC254D99-C731-4315-B760-9452FF77AC53</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>78DDDF2F-629A-4313-95EE-1BB4A7AB3C4A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -353,75 +301,21 @@
 				<key>escaping</key>
 				<integer>126</integer>
 				<key>script</key>
-				<string>/usr/bin/python3 set_date_format.py "{query}"</string>
+				<string>on run argv
+	tell application id "com.runningwithcrayons.Alfred" to set configuration "date_format" to value (item 1 of argv) in workflow "muppet.gate.net.DateCalculator"
+	return "Date format set to " &amp; item 1 of argv
+end run</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>8F4747B0-FA9D-4FCB-B828-4B37602854B5</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>126</integer>
-				<key>script</key>
-				<string>/usr/bin/python3 show_date_format.py</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>78DDDF2F-629A-4313-95EE-1BB4A7AB3C4A</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>dcalcshow date format</string>
-				<key>subtext</key>
-				<string>Show current date format</string>
-				<key>text</key>
-				<string>Show date format</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>FC254D99-C731-4315-B760-9452FF77AC53</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>largetypetext</key>
-				<string>{query}</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.largetype</string>
-			<key>uid</key>
-			<string>C0DB0242-54B1-475E-A327-B61C54C7B668</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -838,13 +732,16 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>/usr/bin/python3 set_time_format.py "{query}"</string>
+				<string>on run argv
+	tell application id "com.runningwithcrayons.Alfred" to set configuration "time_format" to value (item 1 of argv) in workflow "muppet.gate.net.DateCalculator"
+	return "Time format set to " &amp; item 1 of argv
+end run</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
@@ -877,63 +774,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>dcalcshow time format</string>
-				<key>subtext</key>
-				<string>Show current time format</string>
-				<key>text</key>
-				<string>Show time format</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>BFDF2A5E-8F79-4B66-9297-4FC3A926B30A</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>/usr/bin/python3 show_time_format.py</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>8BB3905A-8C58-4F09-B871-9CF756226504</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>largetypetext</key>
-				<string>{query}</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.largetype</string>
-			<key>uid</key>
-			<string>5F6FEA98-E805-408A-A1F4-A8A5FC49DC81</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -960,13 +800,16 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>/usr/bin/python3 set_date_time_format.py "{query}"</string>
+				<string>on run argv
+	tell application id "com.runningwithcrayons.Alfred" to set configuration "date_time_format" to value (item 1 of argv) in workflow "muppet.gate.net.DateCalculator"
+	return "Date/time format set to " &amp; item 1 of argv
+end run</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>0</integer>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
@@ -1224,6 +1067,8 @@ You can also set the combined date and time format using:
 
 **dcalcset date and time format**
 
+The same three settings are also in Alfred Preferences: open the workflow and click _Configure Workflow_. Changing a setting in either place changes it in both.
+
 If you’re ever puzzled by _invalid command_ or _invalid expression_ errors, then start with the settings; they might be set incorrectly.
 
 Oh, almost forgot.
@@ -1347,6 +1192,8 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version History
+(Version 4.2) - The date, time and date‑and‑time formats are now in _Configure Workflow_ as well as the _dcalcset_ keywords. The _dcalcshow date format_ and _dcalcshow time format_ keywords are gone, because the lists mark the current choice with a *. Formats chosen in an earlier version go back to the defaults, so pick them again once. Anniversaries are kept.
+
 (Version 4.1) - Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again and now work when taking days away, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
 
 (Version 4.0) - Updated for Alfred 6. The workflow now runs on Python 3, because macOS no longer includes Python 2.
@@ -1481,13 +1328,6 @@ THE SOFTWARE.
 			<key>ypos</key>
 			<real>1280</real>
 		</dict>
-		<key>5F6FEA98-E805-408A-A1F4-A8A5FC49DC81</key>
-		<dict>
-			<key>xpos</key>
-			<integer>700</integer>
-			<key>ypos</key>
-			<real>1520</real>
-		</dict>
 		<key>6344C161-C077-4BB5-800B-6BCF7A98F450</key>
 		<dict>
 			<key>xpos</key>
@@ -1509,26 +1349,12 @@ THE SOFTWARE.
 			<key>ypos</key>
 			<real>1400</real>
 		</dict>
-		<key>78DDDF2F-629A-4313-95EE-1BB4A7AB3C4A</key>
-		<dict>
-			<key>xpos</key>
-			<integer>500</integer>
-			<key>ypos</key>
-			<real>200</real>
-		</dict>
 		<key>7F570625-0CC5-4B6E-A1BF-2F3169943C33</key>
 		<dict>
 			<key>xpos</key>
 			<integer>700</integer>
 			<key>ypos</key>
 			<real>530</real>
-		</dict>
-		<key>8BB3905A-8C58-4F09-B871-9CF756226504</key>
-		<dict>
-			<key>xpos</key>
-			<integer>500</integer>
-			<key>ypos</key>
-			<real>1520</real>
 		</dict>
 		<key>8F4747B0-FA9D-4FCB-B828-4B37602854B5</key>
 		<dict>
@@ -1564,20 +1390,6 @@ THE SOFTWARE.
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>60</real>
-		</dict>
-		<key>BFDF2A5E-8F79-4B66-9297-4FC3A926B30A</key>
-		<dict>
-			<key>xpos</key>
-			<integer>300</integer>
-			<key>ypos</key>
-			<real>1520</real>
-		</dict>
-		<key>C0DB0242-54B1-475E-A327-B61C54C7B668</key>
-		<dict>
-			<key>xpos</key>
-			<integer>700</integer>
-			<key>ypos</key>
-			<real>200</real>
 		</dict>
 		<key>C5269892-166A-4776-9B18-6B0A72E66364</key>
 		<dict>
@@ -1621,16 +1433,158 @@ THE SOFTWARE.
 			<key>ypos</key>
 			<real>1760</real>
 		</dict>
-		<key>FC254D99-C731-4315-B760-9452FF77AC53</key>
-		<dict>
-			<key>xpos</key>
-			<integer>300</integer>
-			<key>ypos</key>
-			<real>200</real>
-		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>dd.mm.yy</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>dd mmm yyyy (wordy date format)</string>
+						<string>dd mmm yyyy</string>
+					</array>
+					<array>
+						<string>dd-mm-yy (short UK date (-))</string>
+						<string>dd-mm-yy</string>
+					</array>
+					<array>
+						<string>dd-mm-yyyy (long UK date (-))</string>
+						<string>dd-mm-yyyy</string>
+					</array>
+					<array>
+						<string>dd.mm.yy (short UK date (.))</string>
+						<string>dd.mm.yy</string>
+					</array>
+					<array>
+						<string>dd.mm.yyyy (long UK date (.))</string>
+						<string>dd.mm.yyyy</string>
+					</array>
+					<array>
+						<string>dd/mm/yy (short UK date (/))</string>
+						<string>dd/mm/yy</string>
+					</array>
+					<array>
+						<string>dd/mm/yyyy (long UK date (/))</string>
+						<string>dd/mm/yyyy</string>
+					</array>
+					<array>
+						<string>mm-dd-yy (short US date (-))</string>
+						<string>mm-dd-yy</string>
+					</array>
+					<array>
+						<string>mm-dd-yyyy (long US date (-))</string>
+						<string>mm-dd-yyyy</string>
+					</array>
+					<array>
+						<string>mm.dd.yy (short US date (.))</string>
+						<string>mm.dd.yy</string>
+					</array>
+					<array>
+						<string>mm.dd.yyyy (long US date (.))</string>
+						<string>mm.dd.yyyy</string>
+					</array>
+					<array>
+						<string>mm/dd/yy (short US date (/))</string>
+						<string>mm/dd/yy</string>
+					</array>
+					<array>
+						<string>mm/dd/yyyy (long US date (/))</string>
+						<string>mm/dd/yyyy</string>
+					</array>
+					<array>
+						<string>yyyy-mm-dd (international (-))</string>
+						<string>yyyy-mm-dd</string>
+					</array>
+					<array>
+						<string>yyyymmdd (iso)</string>
+						<string>yyyymmdd</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Also set with dcalcset date format</string>
+			<key>label</key>
+			<string>Date format</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>date_format</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>24-hour</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>12-hour format</string>
+						<string>12-hour</string>
+					</array>
+					<array>
+						<string>24-hour format</string>
+						<string>24-hour</string>
+					</array>
+					<array>
+						<string>Military format</string>
+						<string>Military</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Also set with dcalcset time format</string>
+			<key>label</key>
+			<string>Time format</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>time_format</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>@</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>date@time</string>
+						<string>@</string>
+					</array>
+					<array>
+						<string>dateTtime</string>
+						<string>T</string>
+					</array>
+					<array>
+						<string>DATE ==&gt; date TIME ==&gt; time</string>
+						<string>arrow</string>
+					</array>
+					<array>
+						<string>date at time</string>
+						<string>at</string>
+					</array>
+					<array>
+						<string>time on date</string>
+						<string>on</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Also set with dcalcset date and time format</string>
+			<key>label</key>
+			<string>Date and time format</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>date_time_format</string>
+		</dict>
+	</array>
 	<key>version</key>
-	<string>4.1</string>
+	<string>4.2</string>
 	<key>webaddress</key>
 	<string>http://muppetgate.github.io/pages/date-calculator-help-page.html</string>
 </dict>

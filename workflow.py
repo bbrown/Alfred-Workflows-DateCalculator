@@ -57,6 +57,10 @@ class Workflow:
             # loaded here, not in __init__, so a broken settings.json shows as an error row in Alfred
             self.settings = Settings(os.path.join(os.environ['alfred_workflow_data'], 'settings.json'),
                                      self.default_settings)
+            # Configure Workflow passes settings such as date_format as env vars; they beat old copies in
+            # settings.json. dict.update skips Settings.__setitem__, so this doesn't save them.
+            self.settings.update({k: os.environ[k.replace('-', '_')] for k in self.default_settings
+                                  if k.replace('-', '_') in os.environ})
             func(self)
             return 0
         except Exception as e:
@@ -87,6 +91,15 @@ if __name__ == '__main__':  # self-check: python3 workflow.py
         wf2 = Workflow()
         assert wf2.run(lambda _: None) == 0 and wf2.settings == wf.settings  # saved and reloaded
         assert wf.filter('X', ['xmas', 'bday']) == ['xmas']
+
+        wf3 = Workflow(default_settings={'date-format': 'dd.mm.yy'})
+        wf3.run(lambda w: w.settings.__setitem__('date-format', 'old'))  # an old saved choice
+        os.environ['date_format'] = 'yyyy-mm-dd'
+        wf3.run(lambda _: None)
+        assert wf3.settings['date-format'] == 'yyyy-mm-dd'  # the env var wins
+        with open(os.path.join(data_dir, 'settings.json')) as f:
+            assert json.load(f)['date-format'] == 'old'  # and isn't saved
+        del os.environ['date_format']
 
         def run_capture(w, func):
             out = io.StringIO()
