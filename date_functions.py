@@ -129,8 +129,7 @@ def end_of_year(settings):
 
 
 def next_month(settings):
-    return datetime(year=_get_current_date().year, day=1, month=_get_current_date().month + 1), \
-           get_date_format(settings)
+    return _get_current_date() + relativedelta(months=1, day=1), get_date_format(settings)
 
 
 def next_passover(settings):

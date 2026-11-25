@@ -51,7 +51,9 @@ class DateParser:
         # invocation:
         # mybirthday ====> returns the date of my next birthday
         # ^mybirthday ===> the date I was born
-        return '|'.join('\^?' + str(x) for x in settings['anniversaries'].keys())
+        # A name may not run on into more letters, so "bday" can't match the start of "bdaytwo".
+        # With no anniversaries, (?!) matches nothing, where an empty pattern would match everything.
+        return r'\^?(?:%s)(?![a-z_])' % ('|'.join(map(re.escape, settings['anniversaries'])) or '(?!)')
 
     @staticmethod
     def _get_date_formatters():
@@ -66,7 +68,9 @@ class DateParser:
 
     @staticmethod
     def _get_date_functions():
-        return '|'.join(re.escape(str(x)) for x in DATE_FUNCTION_MAP.keys())
+        # A name ending in a letter may not run on into more letters: "next mon" mustn't match the start of
+        # "next month", nor "mum" the start of an anniversary called "mum_bday". Symbols are exempt, so "*wd" works.
+        return '|'.join(re.escape(x) + ('(?![a-z_])' if x[-1].isalpha() else '') for x in DATE_FUNCTION_MAP)
 
     @staticmethod
     def _get_week_days():
