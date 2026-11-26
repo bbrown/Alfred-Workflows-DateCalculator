@@ -45,6 +45,9 @@ TIME_MAPPINGS = {
 DATE_TIME_MAPPINGS = {'@': '{date}@{time}', 'T': '{date}T{time}', 'at': '{date} at {time}', 'on': '{time} on {date}',
                       'arrow': 'DATE ==> {date} TIME ==> {time}'}
 
+# each format setting's choices, for the dcalcset lists and Configure Workflow
+SETTING_MAPPINGS = {'date-format': DATE_MAPPINGS, 'time-format': TIME_MAPPINGS, 'date-time-format': DATE_TIME_MAPPINGS}
+
 DEFAULT_DATE_FORMAT = 'dd.mm.yy'
 DEFAULT_TIME_FORMAT = '24-hour'
 DEFAULT_DATE_TIME_FORMAT = '@'

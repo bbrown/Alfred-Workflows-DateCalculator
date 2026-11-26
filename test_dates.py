@@ -13,9 +13,7 @@ import date_calculator
 import date_functions
 import set_anniversary
 import utils
-from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS
-
-MAPPINGS = {'date-format': DATE_MAPPINGS, 'time-format': TIME_MAPPINGS, 'date-time-format': DATE_TIME_MAPPINGS}
+from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, SETTING_MAPPINGS
 
 
 class FakeWorkflow:
@@ -128,6 +126,13 @@ with open(os.path.join(here, 'info.plist'), 'rb') as plist, open(os.path.join(he
 for item in info['userconfigurationconfig']:
     key = item['variable'].replace('_', '-')
     assert item['config']['default'] == DEFAULT_WORKFLOW_SETTINGS[key], key
-    assert sorted(value for _, value in item['config']['pairs']) == sorted(MAPPINGS[key]), key
+    assert sorted(value for _, value in item['config']['pairs']) == sorted(SETTING_MAPPINGS[key]), key
+
+# every script Alfred runs is here, and format_list.py gets a setting it knows
+for obj in info['objects']:
+    words = obj['config'].get('script', '').split()
+    if words[:1] == ['/usr/bin/python3']:
+        assert os.path.exists(os.path.join(here, words[1])), words
+        assert words[1] != 'format_list.py' or words[2] in SETTING_MAPPINGS, words
 
 print('test_dates.py self-check passed')

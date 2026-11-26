@@ -272,7 +272,7 @@
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>/usr/bin/python3 date_format_list.py</string>
+				<string>/usr/bin/python3 format_list.py date-format</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -703,7 +703,7 @@ end run</string>
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>/usr/bin/python3 time_format_list.py</string>
+				<string>/usr/bin/python3 format_list.py time-format</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -844,7 +844,7 @@ end run</string>
 				<key>runningsubtext</key>
 				<string>Loading list . . .</string>
 				<key>script</key>
-				<string>/usr/bin/python3 date_time_format_list.py</string>
+				<string>/usr/bin/python3 format_list.py date-time-format</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
