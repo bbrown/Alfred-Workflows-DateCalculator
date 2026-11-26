@@ -14,11 +14,6 @@ class CalculationError(Exception):
     """Its message is the answer to show, such as "All days excluded"."""
 
 
-def do_formats(command, settings):
-    date_time, _ = convert_date_time(command.dateTime, settings)
-    return DATE_FORMATTERS_MAP[command.dateFormat.lower()](date_time)
-
-
 def delta_arithmetic(date_time, operand):
     sign = 1 if operand.operator == "+" else -1
     for timespan in operand.timeSpans:
@@ -33,7 +28,11 @@ def do_timespans(command, settings):
     for operand in command.operandList:
         date_time = delta_arithmetic(date_time, operand)
 
-    return exclusion_check(original_date_time, date_time, command, settings).strftime(output_format)
+    date_time = exclusion_check(original_date_time, date_time, command, settings)
+
+    if hasattr(command, "dateFormat"):
+        return DATE_FORMATTERS_MAP[command.dateFormat.lower()](date_time)
+    return date_time.strftime(output_format)
 
 
 def do_subtraction(command, settings):
@@ -149,10 +148,6 @@ def main(wf):
 
         if hasattr(command, "dateTime"):
             output = do_timespans(command, wf.settings)
-
-            if hasattr(command, "dateFormat"):
-                command.dateTime = output  # the formatters read the answer back as a date
-                output = do_formats(command, wf.settings)
         else:
             output = do_subtraction(command, wf.settings)
 
