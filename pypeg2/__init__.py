@@ -44,7 +44,7 @@ _RegEx = type(word)
 restline = re.compile(r".*")
 """Regular expression for rest of line."""
 
-whitespace = re.compile("(?m)\s+")
+whitespace = re.compile(r"(?m)\s+")
 """Regular expression for scanning whitespace."""
 
 comment_sh  = re.compile(r"\#.*")
@@ -411,7 +411,7 @@ class Enum(Namespace):
 
 
 class Symbol(str):
-    """Use to scan Symbols.
+    r"""Use to scan Symbols.
 
     Class variables:
         regex               regular expression to scan, default r"\w+"
@@ -449,7 +449,7 @@ class Symbol(str):
 
 
 class Keyword(Symbol):
-    """Use to access the keyword table.
+    r"""Use to access the keyword table.
 
     Class variables:
         regex   regular expression to scan, default r"\w+"
@@ -610,7 +610,7 @@ def how_many(grammar):
 
 def parse(text, thing, filename=None, whitespace=whitespace, comment=None,
         keep_feeble_things=False):
-    """Parse text following thing as grammar and return the resulting things or
+    r"""Parse text following thing as grammar and return the resulting things or
     raise an error.
 
     Arguments:
@@ -688,7 +688,7 @@ def _issubclass(obj, cls):
 
 
 class Parser(object):
-    """Offers parsing and composing capabilities. Implements a Packrat parser.
+    r"""Offers parsing and composing capabilities. Implements a Packrat parser.
     
     Instance variables:
         whitespace          regular expression to scan whitespace
