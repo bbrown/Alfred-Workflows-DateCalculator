@@ -120,25 +120,11 @@ class DateParser:
 
         class Commands(str):
             grammar = [
-
                 (attr("dateTime1", DateTime), attr("operandList1", OperandList), "-", attr("dateTime2", DateTime),
-                 attr("operandList2", OperandList),
-                 attr("format", Format)),
-
+                 attr("operandList2", OperandList), attr("format", Format)),
+                # exclusions and the format are both optional, so "today", "today wd" and "today + 5d x sat wd" all fit
                 (attr("dateTime", DateTime), attr("operandList", OperandList),
-                 attr("dateFormat", DateFormat)),
-
-                (attr("dateTime", DateTime), attr("operandList", OperandList),
-                 attr("exclusionCommands", ExclusionCommands),
-                 attr("dateFormat", DateFormat)),
-
-                (attr("dateTime", DateTime), attr("operandList", OperandList),
-                 attr("exclusionCommands", ExclusionCommands)),
-
-                (attr("dateTime", DateTime), attr("dateFormat", DateFormat)),
-
-                (attr("dateTime", DateTime), attr("operandList", OperandList))
-
+                 optional(attr("exclusionCommands", ExclusionCommands)), optional(attr("dateFormat", DateFormat)))
             ]
 
         return parse(command_string, Commands)
