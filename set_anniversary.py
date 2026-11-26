@@ -1,6 +1,7 @@
 import sys
 
-from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
+from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS
+from date_functions import get_date_format
 from utils import convert_date_time
 from workflow import Workflow
 from macros_parser import MacrosParser
@@ -8,82 +9,28 @@ from macros_parser import MacrosParser
 FOUR_DIGIT_DATE_ERROR = "Please ensure that you have set your date format to one that supports 4-digit years"
 
 
-def add_anniversary(anniversaries, command, date_mapping, wf):
-
-    if "%Y" not in date_mapping["date-format"]:
-        return FOUR_DIGIT_DATE_ERROR
-
-    if command.anniversaryName in anniversaries:
-        output = "{anniversaryName} already exists".format(anniversaryName=command.anniversaryName)
-    else:
-        date_time, output_format = convert_date_time(command.dateTime, wf.settings)
-        anniversary_date = date_time.isoformat()
-        anniversaries[command.anniversaryName] = anniversary_date
-        wf.settings["anniversaries"] = anniversaries
-        output = "{anniversaryName} added".format(anniversaryName=command.anniversaryName)
-    return output
-
-
-def change_anniversary(anniversaries, command, date_mapping, wf):
-
-    if "%Y" not in date_mapping["date-format"]:
-        return FOUR_DIGIT_DATE_ERROR
-
-    if command.anniversaryName not in anniversaries:
-        output = "{anniversaryName} does not exist".format(anniversaryName=command.anniversaryName)
-    else:
-        date_time, output_format = convert_date_time(command.dateTime, wf.settings)
-        anniversary_date = date_time.isoformat()
-        anniversaries[command.anniversaryName] = anniversary_date
-        wf.settings["anniversaries"] = anniversaries
-        output = "{anniversaryName} changed".format(anniversaryName=command.anniversaryName)
-    return output
-
-
-def delete_anniversary(anniversaries, command, wf):
-    if command.anniversaryName not in anniversaries:
-        return "{anniversaryName} does not exist".format(anniversaryName=command.anniversaryName)
-
-    del anniversaries[command.anniversaryName]
-    wf.settings["anniversaries"] = anniversaries
-    output = "{anniversaryName} deleted".format(anniversaryName=command.anniversaryName)
-    return output
-
-
 def main(wf):
-    # Get the date format from the configuration
-    key = wf.settings['date-format']
-    args = wf.args
-
-    date_mapping = DATE_MAPPINGS[key]
-
-    # There is no point going any further
-    # unless they are set up for a four-digit date.
-
     anniversaries = wf.settings["anniversaries"]
 
-    command_parser = MacrosParser(wf.settings)
-
     try:
-
-        command = command_parser.parse_command(args[0])
+        command = MacrosParser(wf.settings).parse_command(wf.args[0])
         # names are saved in lower case, so check and delete them that way too
-        command.anniversaryName = command.anniversaryName.lower()
+        name = command.anniversaryName.lower()
 
-        if hasattr(command, "anniversaryName") and hasattr(command, "add") and hasattr(command, "dateTime"):
-
-            output = add_anniversary(anniversaries, command, date_mapping, wf)
-
-        elif hasattr(command, "anniversaryName") and hasattr(command, "edit") and hasattr(command, "dateTime"):
-
-            output = change_anniversary(anniversaries, command, date_mapping, wf)
-
-        elif hasattr(command, "anniversaryName") and hasattr(command, "delete") and not hasattr(command, "dateTime"):
-
-            output = delete_anniversary(anniversaries, command, wf)
-
+        if not hasattr(command, "delete") and "%Y" not in get_date_format(wf.settings):
+            output = FOUR_DIGIT_DATE_ERROR
+        elif hasattr(command, "add") and name in anniversaries:
+            output = name + " already exists"
+        elif not hasattr(command, "add") and name not in anniversaries:
+            output = name + " does not exist"
+        elif hasattr(command, "delete"):
+            del anniversaries[name]
+            wf.settings["anniversaries"] = anniversaries
+            output = name + " deleted"
         else:
-            output = "Invalid expression"
+            anniversaries[name] = convert_date_time(command.dateTime, wf.settings)[0].isoformat()
+            wf.settings["anniversaries"] = anniversaries
+            output = name + (" added" if hasattr(command, "add") else " changed")
 
     except SyntaxError:
         output = "Invalid Command"
@@ -93,10 +40,7 @@ def main(wf):
 
     print(output)
 
-# ## Python calling routine. Will only run this app if it is the main program
-# ## Otherwise it won't run because it is an included module -- clever!
 
 if __name__ == '__main__':
     workflow = Workflow(default_settings=DEFAULT_WORKFLOW_SETTINGS)
     sys.exit(workflow.run(main))
-

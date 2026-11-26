@@ -5,46 +5,17 @@ from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
 from workflow import Workflow
 
 
-def filter_names(name):
-    """
-    This is just the filter function
-    for the framework search
-    :param name:
-    :return:
-    """
-    return name.lower()
-
-
 def main(wf):
-    # Get the date format from the configuration
-
-    args = wf.args
-
-    key = wf.settings['date-format']
-
-    date_mapping = DATE_MAPPINGS[key]
     anniversaries = wf.settings["anniversaries"]
+    date_format = DATE_MAPPINGS[wf.settings['date-format']]['date-format']
 
-    if args[0]:
-        filtered_keys = wf.filter(query=args[0], items=anniversaries.keys(), key=filter_names)
-    else:
-        filtered_keys = anniversaries.keys()
-
-    for anniversary in sorted(filtered_keys):
-        anniversary_date_str = anniversaries[anniversary]
-        date_object = datetime.fromisoformat(anniversary_date_str)
-        entry = "{anniversary} ➤ {date}".format(anniversary=anniversary,
-                                                  date=date_object.strftime(date_mapping['date-format']))
-
-        wf.add_item(title=entry, subtitle="Press alt to change, ctrl to delete", arg=anniversary, valid=True)
+    for name in sorted(wf.filter(wf.args[0], anniversaries)):
+        date = datetime.fromisoformat(anniversaries[name]).strftime(date_format)
+        wf.add_item(title=name + " ➤ " + date, subtitle="Press alt to change, ctrl to delete", arg=name, valid=True)
 
     wf.send_feedback()
 
-# ## Python calling routine. Will only run this app if it is the main program
-# ## Otherwise it won't run because it is an included module -- clever!
 
 if __name__ == '__main__':
     workflow = Workflow(default_settings=DEFAULT_WORKFLOW_SETTINGS)
     sys.exit(workflow.run(main))
-
-
