@@ -112,6 +112,11 @@ assert dcalc('24.11.26 - 5d x weekends') == '17.11.26'
 assert dcalc('30.11.26 - 1d x weekends') == '27.11.26'
 assert dcalc('27.11.26@10:00 + 3d x 30.11.26') == '01.12.26@10:00'
 
+# A long excluded range is skipped in either direction, and only moving the answer over 100 years is too far
+assert dcalc('27.11.26 - 1d x 01.01.25 to 26.11.26') == '31.12.24'
+assert dcalc('26.11.26 + 1d x 27.11.26 to 30.12.27') == '31.12.27'
+assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == "That's too far away"
+
 # The exclude keyword is a whole word: "xmon" without it isn't read as "x mon" (exclude Mondays)
 assert dcalc('24.11.26 + 5d xmon') == 'Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'

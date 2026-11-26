@@ -1,7 +1,7 @@
 import sys
 from datetime import timedelta
 
-from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, UNITS, MAX_LOOKAHEAD_ATTEMPTS
+from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, UNITS, MAX_LOOKAHEAD_DAYS
 from date_formatters import DATE_FORMATTERS_MAP
 from date_functions import EXCLUSION_MAP
 from date_parser import DateParser
@@ -66,22 +66,25 @@ def exclusion_check(original_date_time, date_time, command, settings):
     if len(weekdays) >= 7:
         raise CalculationError("All days excluded")
 
-    def count_excluded_days(start, end):
-        """Excluded days from start to end, in either direction. start's day was counted by the window before."""
-        # whole days, so a typed time can't move a day into or out of the window
-        first, last = sorted((start.date(), end.date()))
-        window = (first + timedelta(days=n) for n in range((last - first).days + 1))
-        return sum(1 for day in window if day != start.date() and
-                   (day.weekday() in weekdays or day in dates or any(low <= day <= high for low, high in ranges)))
+    def excluded(day):
+        return day.weekday() in weekdays or day in dates or any(low <= day <= high for low, high in ranges)
 
-    # taking days away moves back in time, so each excluded day pushes the answer further back
+    # Count the excluded days the sum passed, after the starting day. Whole days, so a typed time
+    # can't move one in or out.
+    start = original_date_time.date()
+    first, last = sorted((start, date_time.date()))
+    passed = (first + timedelta(days=n) for n in range((last - first).days + 1))
+    extra_days = sum(1 for day in passed if day != start and excluded(day))
+
+    # Then go on a day at a time, back in time when taking days away, until as many days that aren't excluded
+    # make up for them.
     step = timedelta(days=1 if date_time >= original_date_time else -1)
-    start, extra_days = original_date_time, count_excluded_days(original_date_time, date_time)
-    for _ in range(MAX_LOOKAHEAD_ATTEMPTS):
-        if not extra_days:
+    for _ in range(MAX_LOOKAHEAD_DAYS):
+        if extra_days == 0:
             return date_time
-        start, date_time = date_time, date_time + extra_days * step
-        extra_days = count_excluded_days(start, date_time)
+        date_time += step
+        if not excluded(date_time.date()):
+            extra_days -= 1
     raise CalculationError("That's too far away")
 
 

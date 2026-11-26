@@ -1181,7 +1181,7 @@ This is a little bit experimental, but I thought I’d throw it in for a bit of 
 - **No result for an expression you’re sure is right:** check the [settings](#settings). Dates have to be typed in the chosen format, so _25.12.14_ won’t work when the format is _mm/dd/yyyy_.
 - **No result after a word:** leave a space between words. **today wd** works, **todaywd** doesn’t.
 - **Can’t add an anniversary:** choose a date format with a four-digit year first.
-- **That’s too far away:** an exclusion is skipping more days than the workflow will look through. Shorten the excluded range.
+- **That’s too far away:** skipping the excluded days would move the answer more than 100 years. Shorten the excluded range.
 
 ### Checking changes
 If you change the code, run the two self-checks. They need nothing but Python:

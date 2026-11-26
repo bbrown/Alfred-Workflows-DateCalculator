@@ -71,6 +71,6 @@ DEFAULT_WORKFLOW_SETTINGS = {
 
 }
 
-MAX_LOOKAHEAD_ATTEMPTS = 300
+MAX_LOOKAHEAD_DAYS = 36525  # 100 years: an exclusion that moves the answer further is "That's too far away"
 
 
