@@ -1,8 +1,8 @@
 import sys
+from datetime import datetime
 
 from date_format_mappings import DATE_MAPPINGS, DEFAULT_WORKFLOW_SETTINGS
 from workflow import Workflow
-from dateutil import parser
 
 
 def filter_names(name):
@@ -32,7 +32,7 @@ def main(wf):
 
     for anniversary in sorted(filtered_keys):
         anniversary_date_str = anniversaries[anniversary]
-        date_object = parser.parse(anniversary_date_str)
+        date_object = datetime.fromisoformat(anniversary_date_str)
         entry = "{anniversary} ➤ {date}".format(anniversary=anniversary,
                                                   date=date_object.strftime(date_mapping['date-format']))
 

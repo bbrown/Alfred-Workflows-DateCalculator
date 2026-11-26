@@ -5,7 +5,6 @@ from date_format_mappings import WN_FUNCTION_REGEX
 from date_functions import DATE_FUNCTION_MAP, get_date_format, get_time_format, get_full_format, \
     get_time_preprocessor, DAYS_OF_WEEK_ABBREVIATIONS
 from dateutil.rrule import rrule, YEARLY
-import dateutil.parser
 
 
 # package for general utility stuff
@@ -37,8 +36,8 @@ def process_macros(date_time_str, anniversaries):
 
         if date_time_str.lower() == anniversary:
             anniversary_date_str = anniversaries[anniversary]
-            # We're storing in ISO format. How do you get that back?
-            anniversary_date = dateutil.parser.parse(anniversary_date_str)
+            # saved with isoformat(), so fromisoformat reads them all
+            anniversary_date = datetime.fromisoformat(anniversary_date_str)
 
             if absolute:
                 return anniversary_date
