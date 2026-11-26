@@ -3,40 +3,9 @@
 from math import floor
 
 from datetime import datetime, timedelta
-# The DAY_MAP is specific to relative delta
-from date_format_mappings import DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS
+from date_format_mappings import DATE_MAPPINGS, TIME_MAPPINGS, DATE_TIME_MAPPINGS, DAYS
 from dateutil.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
 from dateutil.rrule import rrule, YEARLY
-
-DAY_MAP = {
-
-    "mon": relativedelta(days=+1, weekday=MO(+1)),
-    "tue": relativedelta(days=+1, weekday=TU(+1)),
-    "wed": relativedelta(days=+1, weekday=WE(+1)),
-    "thu": relativedelta(days=+1, weekday=TH(+1)),
-    "fri": relativedelta(days=+1, weekday=FR(+1)),
-    "sat": relativedelta(days=+1, weekday=SA(+1)),
-    "sun": relativedelta(days=+1, weekday=SU(+1)),
-
-    "prev mon": relativedelta(days=-1, weekday=MO(-1)),
-    "prev tue": relativedelta(days=-1, weekday=TU(-1)),
-    "prev wed": relativedelta(days=-1, weekday=WE(-1)),
-    "prev thu": relativedelta(days=-1, weekday=TH(-1)),
-    "prev fri": relativedelta(days=-1, weekday=FR(-1)),
-    "prev sat": relativedelta(days=-1, weekday=SA(-1)),
-    "prev sun": relativedelta(days=-1, weekday=SU(-1)),
-}
-
-DAYS_OF_WEEK_ABBREVIATIONS = {
-
-    "mon": "monday",
-    "tue": "tuesday",
-    "wed": "wednesday",
-    "thu": "thursday",
-    "fri": "friday",
-    "sat": "saturday",
-    "sun": "sunday"
-}
 
 
 def get_date_format(settings):
@@ -48,9 +17,8 @@ def get_time_format(settings):
 
 
 def get_full_format(settings):
-    return DATE_TIME_MAPPINGS[settings['date-time-format']]['date-time-format'](
-        DATE_MAPPINGS[settings['date-format']]['date-format'],
-        TIME_MAPPINGS[settings['time-format']]['time-format'])
+    return DATE_TIME_MAPPINGS[settings['date-time-format']].format(date=get_date_format(settings),
+                                                                   time=get_time_format(settings))
 
 
 def get_date_format_regex(settings):
@@ -62,9 +30,8 @@ def get_time_format_regex(settings):
 
 
 def get_full_format_regex(settings):
-    return DATE_TIME_MAPPINGS[settings['date-time-format']]['date-time-format'](
-        DATE_MAPPINGS[settings['date-format']]['regex'],
-        TIME_MAPPINGS[settings['time-format']]['regex'])
+    return DATE_TIME_MAPPINGS[settings['date-time-format']].format(date=get_date_format_regex(settings),
+                                                                   time=get_time_format_regex(settings))
 
 
 def get_time_preprocessor(settings):
@@ -99,25 +66,18 @@ def tomorrow(settings):
     return _get_current_date() + timedelta(days=1), get_date_format(settings)
 
 
-def weekday(day_of_week_str):
-    """
-    This one one is a little bit trickier. We don't want a separate
-    function for each day of the week, so we need to use a bit of
-    currying to return a function that can handle the mapping.
-    :param day_of_week_str: The day of the week as a string, which we will use to map into a table for the
-    calculation.
-    :return: a function that will calculate the day of week and return it along with the format
-    """
-
-    def _weekday(settings):
-        return _get_current_date() + DAY_MAP[day_of_week_str.lower()], get_date_format(settings)
-
-    return _weekday
+def days_from_today(delta):
+    """Returns a function for a day relative to today, such as next Monday."""
+    def _days_from_today(settings):
+        return _get_current_date() + delta, get_date_format(settings)
+    return _days_from_today
 
 
-def next_easter(settings):
-    easter_rule = rrule(freq=YEARLY, byeaster=0)
-    return easter_rule.after(_get_current_date(), inc=False), get_date_format(settings)
+def next_rule(**rule):
+    """Returns a function for the next date after today that a yearly rrule picks, such as the last Sunday in March."""
+    def _next_rule(settings):
+        return rrule(freq=YEARLY, **rule).after(_get_current_date()), get_date_format(settings)
+    return _next_rule
 
 
 def start_of_year(settings):
@@ -176,60 +136,6 @@ def next_passover(settings):
         return calc_passover_year(_get_current_date().year + 1), get_date_format(settings)
 
 
-def bst(month_number):
-    """
-    Use the rather clever dateutils functions
-    to give us the last Sunday in March/October
-    And currying rocks!
-    :param month_number:
-    :return:
-    """
-
-    def _bst(settings):
-        bst_rule = rrule(freq=YEARLY, bymonth=month_number, byweekday=SU(-1))
-        return bst_rule.after(_get_current_date(), inc=False), get_date_format(settings)
-
-    return _bst
-
-
-def around_easter(days):
-    """
-    We're being clever again. This is a function that returns a function
-    that returns dates as an offset of Easter. Mainly so we can find
-    Pancake Day
-    :param days:
-    :return:
-    """
-
-    def _easter_offset(settings):
-        easters = list(rrule(freq=YEARLY, byeaster=0, count=2))
-        offset_date = easters[0] + timedelta(days=days)
-
-        if _get_current_date() > offset_date:
-            offset_date = easters[1] + timedelta(days=days)
-
-        return offset_date, get_date_format(settings)
-
-    return _easter_offset
-
-
-def mothers_day_us(settings):
-    """
-    Yes, Mother's day in the US is different to the UK one. It is
-    always the second Sunday in May.
-    :param settings:
-    :return:
-    """
-
-    mothers_day_rule = rrule(freq=YEARLY, bymonth=5, byweekday=SU(2))
-    return mothers_day_rule.after(_get_current_date()), get_date_format(settings)
-
-
-def martin_luther_king_day(settings):
-    mlk_day_rule = rrule(freq=YEARLY, bymonth=1, byweekday=MO(3))
-    return mlk_day_rule.after(_get_current_date()), get_date_format(settings)
-
-
 DATE_FUNCTION_MAP = {
 
     "date": current_date,
@@ -243,34 +149,25 @@ DATE_FUNCTION_MAP = {
     "<": yesterday,
     "tomorrow": tomorrow,
     ">": tomorrow,
-    "easter": next_easter,
-    "next mon": weekday('mon'),
-    "next tue": weekday('tue'),
-    "next wed": weekday('wed'),
-    "next thu": weekday('thu'),
-    "next fri": weekday('fri'),
-    "next sat": weekday('sat'),
-    "next sun": weekday('sun'),
-    "prev mon": weekday('prev mon'),
-    "prev tue": weekday('prev tue'),
-    "prev wed": weekday('prev wed'),
-    "prev thu": weekday('prev thu'),
-    "prev fri": weekday('prev fri'),
-    "prev sat": weekday('prev sat'),
-    "prev sun": weekday('prev sun'),
-    "start bst": bst(3),
-    "end bst": bst(10),
+    "easter": next_rule(byeaster=0),
+    "start bst": next_rule(bymonth=3, byweekday=SU(-1)),
+    "end bst": next_rule(bymonth=10, byweekday=SU(-1)),
     "start year": start_of_year,
     "end year": end_of_year,
     "next month": next_month,
     "passover": next_passover,
-    "pancake day": around_easter(-47),
-    "lent": around_easter(-46),
-    "mlk": martin_luther_king_day,
-    "mum": around_easter(-21),
-    "mom": mothers_day_us,
-    "mutter": mothers_day_us
+    "pancake day": next_rule(byeaster=-47),
+    "lent": next_rule(byeaster=-46),
+    "mlk": next_rule(bymonth=1, byweekday=MO(3)),
+    "mum": next_rule(byeaster=-21),  # Mothering Sunday in the UK
+    "mom": next_rule(bymonth=5, byweekday=SU(2)),  # Mother's Day in the US
+    "mutter": next_rule(bymonth=5, byweekday=SU(2))
 }
+
+for n, day in enumerate(DAYS):
+    DATE_FUNCTION_MAP['next ' + day[:3]] = days_from_today(relativedelta(days=+1, weekday=n))
+    DATE_FUNCTION_MAP['prev ' + day[:3]] = days_from_today(relativedelta(days=-1, weekday=(MO, TU, WE, TH, FR, SA, SU)[n](-1)))
+
 
 def _exclusion_map():
     """Maps each exclusion word to the weekdays it excludes, numbered from Monday as 0."""
@@ -278,7 +175,7 @@ def _exclusion_map():
     exclusions = {'weekdays': workdays, 'wkdy': workdays, 'weekends': weekend, 'wknd': weekend,
                   'all except weekdays': weekend, 'xwkdy': weekend,
                   'all except weekends': workdays, 'xwknd': workdays}
-    for n, day in enumerate(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']):
+    for n, day in enumerate(DAYS):
         exclusions[day + 's'] = exclusions[day[:3]] = frozenset({n})
         # the short "except" forms for Saturday and Sunday have always been exsat and exsun
         exclusions['all except ' + day + 's'] = exclusions[('ex' if n >= 5 else 'x') + day[:3]] = frozenset(range(7)) - {n}

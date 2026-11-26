@@ -6,7 +6,7 @@ from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, DATE_TIME_MAPPINGS, 
 
 
 def get_formatted_key(current_date_time, key, settings):
-    return DATE_TIME_MAPPINGS[key]['date-time-format'](
+    return DATE_TIME_MAPPINGS[key].format(
         date=current_date_time.strftime(DATE_MAPPINGS[settings['date-format']]['date-format']),
         time=current_date_time.strftime(TIME_MAPPINGS[settings['time-format']]['time-format']))
 

@@ -42,14 +42,8 @@ TIME_MAPPINGS = {
 
 # Note that the regex and formatting for the full date/time format is
 # calculated at runtime using the settings for date format and time format
-DATE_TIME_MAPPINGS = {
-
-    '@': {'date-time-format': lambda date, time: '{date}@{time}'.format(date=date, time=time)},
-    'T': {'date-time-format': lambda date, time: '{date}T{time}'.format(date=date, time=time)},
-    'at': {'date-time-format': lambda date, time: '{date} at {time}'.format(date=date, time=time)},
-    'on': {'date-time-format': lambda date, time: time + ' on ' + date},
-    'arrow': {'date-time-format': lambda date, time: 'DATE ==> {date} TIME ==> {time}'.format(date=date, time=time)}
-}
+DATE_TIME_MAPPINGS = {'@': '{date}@{time}', 'T': '{date}T{time}', 'at': '{date} at {time}', 'on': '{time} on {date}',
+                      'arrow': 'DATE ==> {date} TIME ==> {time}'}
 
 DEFAULT_DATE_FORMAT = 'dd.mm.yy'
 DEFAULT_TIME_FORMAT = '24-hour'
@@ -57,6 +51,8 @@ DEFAULT_DATE_TIME_FORMAT = '@'
 
 # the letters for time spans and formats, largest first, which is the order answers list them in
 UNITS = {'y': 'year', 'm': 'month', 'w': 'week', 'd': 'day', 'h': 'hour', 'M': 'minute', 's': 'second'}
+
+DAYS = ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
 DEFAULT_ANNIVERSARIES = {'christmas': '1900-12-25T00:30:00',
                          'alfred': '2010-02-28T00:00:00',

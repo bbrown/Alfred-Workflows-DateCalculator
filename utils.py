@@ -1,9 +1,9 @@
 from datetime import datetime, date
 import re
-from date_format_mappings import WN_FUNCTION_REGEX
+from date_format_mappings import WN_FUNCTION_REGEX, DAYS
 
 from date_functions import DATE_FUNCTION_MAP, get_date_format, get_time_format, get_full_format, \
-    get_time_preprocessor, DAYS_OF_WEEK_ABBREVIATIONS
+    get_time_preprocessor
 from dateutil.rrule import rrule, YEARLY
 
 
@@ -19,32 +19,12 @@ def get_anniversary(date_object):
 
 
 def process_macros(date_time_str, anniversaries):
-    """
-    This method will look through the settings
-    and return a date for an anniversary, if
-    it finds one.
-    :return:
-    """
-
-    absolute = False
-
-    if date_time_str.startswith("^"):
-        date_time_str = date_time_str.lstrip("^")
-        absolute = True
-
-    for anniversary in anniversaries.keys():
-
-        if date_time_str.lower() == anniversary:
-            anniversary_date_str = anniversaries[anniversary]
-            # saved with isoformat(), so fromisoformat reads them all
-            anniversary_date = datetime.fromisoformat(anniversary_date_str)
-
-            if absolute:
-                return anniversary_date
-            else:
-                return get_anniversary(anniversary_date)
-
-    return None
+    """The date of a saved anniversary: its next one, or with "^" in front, the original date. None if not saved."""
+    name = date_time_str.lstrip("^")
+    if name not in anniversaries:
+        return None
+    anniversary_date = datetime.fromisoformat(anniversaries[name])  # saved with isoformat()
+    return anniversary_date if date_time_str.startswith("^") else get_anniversary(anniversary_date)
 
 
 def natural_parser(date_time, settings):
@@ -80,7 +60,7 @@ def get_date_from_week_number(date_time):
     year = int(match.group('year') or iso_year)
     week_number = int(match.group('week_number') or iso_week)
     day = match.group('day')
-    week_day = list(DAYS_OF_WEEK_ABBREVIATIONS).index(day.lower()) + 1 if day else iso_day  # Monday is 1
+    week_day = [d[:3] for d in DAYS].index(day.lower()) + 1 if day else iso_day  # Monday is 1
     return date.fromisocalendar(year, week_number, week_day)
 
 
@@ -114,36 +94,15 @@ def convert_date_time(date_time, settings):
     if anniversary_date is not None:
         return datetime.combine(anniversary_date, datetime.max.time()), date_format
 
-    # Now try each in turn to see if we get anything. Note that we have to convert
-    # each one to uppercase before we attempt the conversion. Why? Because if the
-    # user is using the 12-hour format then the AM/PM indicators must be in upper case
-    # to get translated correctly. We don't want to force the user to enter the indicators
-    # in upper case, so we'll do the conversion for them.
+    # Try the date and time, then the date, then the time. Upper case, because strptime only reads AM and PM
+    # in capitals, and we don't want to make the user type them that way.
+    date_time_str = get_time_preprocessor(settings)(date_time_str).upper()
     try:
-
-        time_preprocessor = get_time_preprocessor(settings)
-
-        if time_preprocessor:
-            date_time_str = time_preprocessor(date_time_str)
-
-        date_and_time = datetime.strptime(date_time_str.upper(), full_format)
-        return date_and_time, full_format
-
+        return datetime.strptime(date_time_str, full_format), full_format
     except ValueError:
-
-        try:
-
-            process_date = datetime.strptime(date_time_str.upper(), date_format)
-            date_and_time = datetime.combine(process_date, datetime.max.time())
-            return date_and_time, date_format
-
-        except ValueError:
-
-            try:
-                # Should throw an error all on its own.
-                process_time = datetime.strptime(date_time_str.upper(), time_format).time()
-                date_and_time = datetime.combine(datetime.today(), process_time)
-                return date_and_time, time_format
-
-            except:
-                raise ValueError
+        pass
+    try:
+        return datetime.combine(datetime.strptime(date_time_str, date_format), datetime.max.time()), date_format
+    except ValueError:
+        pass
+    return datetime.combine(datetime.today(), datetime.strptime(date_time_str, time_format).time()), time_format
