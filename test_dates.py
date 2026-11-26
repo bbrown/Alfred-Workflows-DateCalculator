@@ -96,6 +96,7 @@ assert dcalc('wn 2015 5 sun - 08.02.15') == '1 week'
 # Format options read the answer itself, so a two-digit year can't move it into 1969-2068 (25.12.1900 was a Tuesday)
 assert dcalc('^christmas wd') == 'TUE'
 assert dcalc('01.01.26 + 50y wd') == 'WED'
+assert dcalc('25.12.26 iso') == '2026-12-25T23:59:59'  # whole seconds; a date sits at the end of its day
 
 
 class December29(date):  # 29.12.2025 is in ISO week 1 of 2026

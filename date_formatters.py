@@ -19,7 +19,7 @@ def week_day_in_isoformat(date_time):
 
 
 def iso_format(date_time):
-    return date_time.isoformat()
+    return date_time.isoformat(timespec='seconds')
 
 
 # Just for a laugh we'll add a function to find the star sign
