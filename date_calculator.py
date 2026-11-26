@@ -142,6 +142,7 @@ def normalised_days(command, date_time_1, date_time_2):
 
 def main(wf):
     query = wf.args[0]
+    error = None
 
     try:
         command = DateParser(wf.settings).parse_command(query)
@@ -152,16 +153,16 @@ def main(wf):
             output = do_subtraction(command, wf.settings)
 
     except SyntaxError:
-        output = "Invalid Command"
+        error = "Invalid Command"
 
     except ValueError:
-        output = "Invalid Date/time"
+        error = "Invalid Date/time"
 
     except CalculationError as e:
-        output = str(e)
+        error = str(e)
 
-    if output.startswith("Invalid"):
-        wf.add_item(title=". . .", subtitle=output, valid=False, arg=query, icon=ICON_ERROR)
+    if error:
+        wf.add_item(title=". . .", subtitle=error, valid=False, arg=query, icon=ICON_ERROR)
     else:
         wf.add_item(title=output, subtitle="Copy to clipboard", valid=True, arg=output)
 

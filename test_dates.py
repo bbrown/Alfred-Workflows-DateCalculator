@@ -17,13 +17,17 @@ from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, SETTING_MAPPINGS
 
 
 class FakeWorkflow:
-    """Just enough of workflow.Workflow for a script's main(): one query in, the first item's text out."""
+    """Just enough of workflow.Workflow for a script's main(): one query in, the first item's text out.
+
+    An error row's message comes out as "error: " plus the message, so a check can tell it from an answer
+    that Enter would copy.
+    """
 
     def __init__(self, query, settings):
         self.args, self.settings, self.items = [query], settings, []
 
     def add_item(self, title, subtitle='', arg=None, valid=False, icon=None):
-        self.items.append(title if valid else subtitle)
+        self.items.append(title if valid else 'error: ' + subtitle)
 
     def send_feedback(self):
         pass
@@ -79,7 +83,7 @@ assert dcalc('mum_bday', four_digit_years).startswith('01.02.')  # its next 1 Fe
 first_of_next_month = (date.today().replace(day=1) + timedelta(days=32)).replace(day=1)
 assert dcalc('next month') == first_of_next_month.strftime('%d.%m.%y')
 assert dcalc('*wd') in ('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN')
-assert dcalc('+1d', settings(anniversaries={})) == 'Invalid Command'
+assert dcalc('+1d', settings(anniversaries={})) == 'error: Invalid Command'
 real_current_date = date_functions._get_current_date
 date_functions._get_current_date = lambda: datetime(2026, 12, 15, 23, 59, 59, 999999)
 assert date_functions.next_month(settings())[0].date() == date(2027, 1, 1)
@@ -108,7 +112,7 @@ utils.date = real_date
 assert dcalc('27.11.26@10:00 + 1d x weekends') == '30.11.26@10:00'
 
 # Each exclusion's day names match its rule, and a long name isn't read as a shorter one
-assert dcalc('27.11.26 + 1d x exsun sundays') == 'All days excluded'
+assert dcalc('27.11.26 + 1d x exsun sundays') == 'error: All days excluded'
 assert dcalc('27.11.26 + 1d x saturdays') == '29.11.26'
 
 # Exclusions count whole days, backwards when taking days away, and a typed time can't land on an excluded date
@@ -119,10 +123,10 @@ assert dcalc('27.11.26@10:00 + 3d x 30.11.26') == '01.12.26@10:00'
 # A long excluded range is skipped in either direction, and only moving the answer over 100 years is too far
 assert dcalc('27.11.26 - 1d x 01.01.25 to 26.11.26') == '31.12.24'
 assert dcalc('26.11.26 + 1d x 27.11.26 to 30.12.27') == '31.12.27'
-assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == "That's too far away"
+assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == "error: That's too far away"
 
 # The exclude keyword is a whole word: "xmon" without it isn't read as "x mon" (exclude Mondays)
-assert dcalc('24.11.26 + 5d xmon') == 'Invalid Command'
+assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 
 # Alfred's help (the readme in info.plist) is a copy of README.md, so they can't drift apart
