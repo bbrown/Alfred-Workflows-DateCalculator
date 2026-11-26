@@ -286,6 +286,15 @@ Alfred shows a copy of this README as the workflow's help, kept in `info.plist`.
 
 `test_dates.py` fails if the two copies differ.
 
+The workflow carries its own copies of dateutil, parsedatetime, pypeg2 and six. The first three are changed, so after replacing one with a newer version, make the same change again:
+
+- **dateutil:** the workflow only uses `relativedelta`, `rrule` and `easter`, so delete `parser`, `tz`, `zoneinfo`, `tzwin.py` and `utils.py` from the `dateutil` folder.
+- **parsedatetime and pypeg2:** a string whose backslash isn't a real escape, such as `"\s"`, needs an `r` in front, or newer versions of Python won't load the file.
+
+This names any file that still has such a string, and prints nothing when all is well:
+
+    /usr/bin/python3 -W error -m compileall -q -f pypeg2 parsedatetime
+
 ### Credits
 A list of things that made my first attempt at Python programming possible:
 - Dean Jackson for his more-than-slightly awesome [Alfred Workflow framework](http://www.deanishe.net/alfred-workflow/), and for his ‘parse-as-you-type’ idea.
