@@ -55,19 +55,8 @@ DEFAULT_DATE_FORMAT = 'dd.mm.yy'
 DEFAULT_TIME_FORMAT = '24-hour'
 DEFAULT_DATE_TIME_FORMAT = '@'
 
-VALID_FORMAT_OPTIONS = ["y", "m", "w", "d", "h", "M", "s"]
-
-TIME_CALCULATION = {
-
-    'y': {'interval': 'year', 'singular': 'year', 'plural': 'years'},
-    'm': {'interval': 'month', 'singular': 'month', 'plural': 'months'},
-    'w': {'interval': 'week', 'singular': 'week', 'plural': 'weeks'},
-    'd': {'interval': 'day', 'singular': 'day', 'plural': 'days'},
-    'h': {'interval': 'hour', 'singular': 'hour', 'plural': 'hours'},
-    'M': {'interval': 'minute', 'singular': 'minute', 'plural': 'minutes'},
-    's': {'interval': 'second', 'singular': 'second', 'plural': 'seconds'}
-
-}
+# the letters for time spans and formats, largest first, which is the order answers list them in
+UNITS = {'y': 'year', 'm': 'month', 'w': 'week', 'd': 'day', 'h': 'hour', 'M': 'minute', 's': 'second'}
 
 DEFAULT_ANNIVERSARIES = {'christmas': '1900-12-25T00:30:00',
                          'alfred': '2010-02-28T00:00:00',
