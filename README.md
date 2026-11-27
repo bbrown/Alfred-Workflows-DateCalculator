@@ -16,6 +16,7 @@ This is a date calculator – kind of. It won’t tell you when you’ll win the
 - [Anniversaries](#anniversaries)
 - [Settings](#settings)
 - [Natural language](#natural-language)
+- [Fun things to try](#fun-things-to-try)
 - [Troubleshooting](#troubleshooting)
 - [Checking changes](#checking-changes), [Credits](#credits), [Version history](#version-history), [License](#license)
 
@@ -289,6 +290,21 @@ This is a little bit experimental, but I thought I’d throw it in for a bit of 
 Every word has to be one the parser understands. If one isn’t, you get _Invalid Date/time_ rather than a guess, so **dcalc "3 days after christmas"** doesn’t quietly turn into 3 days from today.
 
 Quoted phrases follow the parser’s own rules, so **"next friday"** is the Friday of next week, while **next fri** without quotes, like **"friday"**, is the coming one.
+
+### Fun things to try
+Save your birthday as an [anniversary](#anniversaries) called **bday** first. Then:
+
+| Type this | To get |
+|---|---|
+| **dcalc ^bday + 10000d** | The day you’re 10,000 days old |
+| **dcalc ^bday + 1000000000s iso** | The second you’re a billion seconds old, counting from the midnight you were born |
+| **dcalc ^bday wd** | The day of the week you were born |
+| **dcalc ^bday moon** | The moon on the day you were born |
+| **dcalc christmas - today d** | Sleeps until Christmas |
+| **dcalc friday 13 - today d** | Days until the next Friday the 13th |
+| **dcalc next month - 1d** | The last day of this month |
+| **dcalc 06:00 + 1d - 22:00** | The length of a night shift. Without the **+ 1d** it’s 16 hours, because both times are today. |
+| **dcalc today progress** | How much of the year has gone |
 
 ### Troubleshooting
 - **No result for an expression you’re sure is right:** check the [settings](#settings). Dates have to be typed in the chosen format, so _25.12.14_ won’t work when the format is _mm/dd/yyyy_.
