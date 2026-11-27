@@ -167,6 +167,7 @@ Put one of these after a date to find out something about it instead:
 | **iso** | The date and time in ISO 8601 format | **dcalc now iso** | |
 | **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
 | **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
+| **moon** | The phase of the moon, give or take a day | **dcalc 25.12.14 moon** | _🌒 Waxing crescent_ |
 
 These work after a calculation, too: **dcalc today + 100d wd**.
 

@@ -180,6 +180,10 @@ assert dcalc('26.11.26 + 5 dayz') == 'error: Invalid Command'
 
 assert (dcalc('25.12.14 doy'), dcalc('31.12.24 doy'), dcalc('01.02.26 doy')) == ('359', '366', '32')
 
+# The moon is new at a solar eclipse and full at a lunar one
+assert (dcalc('08.04.24 moon'), dcalc('14.03.25 moon')) == ('🌑 New moon', '🌕 Full moon')
+assert dcalc('25.12.14 moon') == '🌒 Waxing crescent'
+
 # Unix times, read with @ and shown with unix, in local time
 assert dcalc('@1795689600 unix') == '1795689600'
 assert dcalc('@0 + 1d unix') == '86400'

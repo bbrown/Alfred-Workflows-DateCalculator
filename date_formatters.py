@@ -1,4 +1,5 @@
 from bisect import bisect
+from datetime import datetime
 
 from date_format_mappings import DAYS
 
@@ -40,6 +41,18 @@ def zodiac_sign(date_time):
     return signs[bisect(signs, (date_time.month, date_time.day))][2]
 
 
+LUNAR_MONTH = 29.530588853  # days, on average
+MOON_PHASES = ('🌑 New moon', '🌒 Waxing crescent', '🌓 First quarter', '🌔 Waxing gibbous',
+               '🌕 Full moon', '🌖 Waning gibbous', '🌗 Last quarter', '🌘 Waning crescent')
+
+
+def moon_phase(date_time):
+    # shortcut: counts average lunar months from a known new moon, so a phase can show a day or so early or late;
+    # use an ephemeris if the exact day matters
+    age = (date_time - datetime(2000, 1, 6, 18, 14)).total_seconds() / 86400 % LUNAR_MONTH
+    return MOON_PHASES[round(age / LUNAR_MONTH * 8) % 8]
+
+
 # The parser tries these names in this order, so a name must come before
 # any shorter name it starts with: 'wdi' before 'wd'.
 DATE_FORMATTERS_MAP = {
@@ -51,5 +64,6 @@ DATE_FORMATTERS_MAP = {
     "doy": day_of_year,
     "iso": iso_format,
     "unix": unix_time,
-    "sign": zodiac_sign
+    "sign": zodiac_sign,
+    "moon": moon_phase
 }
