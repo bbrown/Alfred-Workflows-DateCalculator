@@ -1020,6 +1020,7 @@ Put one of these after a date to find out something about it instead:
 | **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
 | **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
 | **moon** | The phase of the moon, give or take a day | **dcalc 25.12.14 moon** | _🌒 Waxing crescent_ |
+| **progress** | How much of the year has gone | **dcalc 01.07.14 progress** | _▓▓▓▓░░░░░░ 49%_ |
 
 These work after a calculation, too: **dcalc today + 100d wd**.
 

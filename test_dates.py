@@ -184,6 +184,11 @@ assert (dcalc('25.12.14 doy'), dcalc('31.12.24 doy'), dcalc('01.02.26 doy')) == 
 assert (dcalc('08.04.24 moon'), dcalc('14.03.25 moon')) == ('🌑 New moon', '🌕 Full moon')
 assert dcalc('25.12.14 moon') == '🌒 Waxing crescent'
 
+# How much of the year has gone, rounded down, so a bar is only full when the year is
+assert dcalc('01.01.26 progress') == '░░░░░░░░░░ 0%'
+assert dcalc('01.07.26 progress') == '▓▓▓▓░░░░░░ 49%'
+assert dcalc('31.12.26@23:59 progress') == '▓▓▓▓▓▓▓▓▓░ 99%'
+
 # Unix times, read with @ and shown with unix, in local time
 assert dcalc('@1795689600 unix') == '1795689600'
 assert dcalc('@0 + 1d unix') == '86400'

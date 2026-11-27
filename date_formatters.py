@@ -53,6 +53,13 @@ def moon_phase(date_time):
     return MOON_PHASES[round(age / LUNAR_MONTH * 8) % 8]
 
 
+def year_progress(date_time):
+    """How much of the year has gone, as a bar and a percentage, such as "▓▓▓▓▓▓▓▓▓░ 90%"."""
+    start = datetime(date_time.year, 1, 1)
+    gone = (date_time - start) / (start.replace(year=start.year + 1) - start)
+    return '▓' * int(gone * 10) + '░' * (10 - int(gone * 10)) + ' %d%%' % (gone * 100)
+
+
 # The parser tries these names in this order, so a name must come before
 # any shorter name it starts with: 'wdi' before 'wd'.
 DATE_FORMATTERS_MAP = {
@@ -65,5 +72,6 @@ DATE_FORMATTERS_MAP = {
     "iso": iso_format,
     "unix": unix_time,
     "sign": zodiac_sign,
-    "moon": moon_phase
+    "moon": moon_phase,
+    "progress": year_progress
 }
