@@ -28,6 +28,10 @@ def process_macros(date_time_str, anniversaries):
     return anniversary_date if date_time_str.startswith("^") else get_anniversary(anniversary_date)
 
 
+# "and", which joins phrases, and words parseDT reads but nlp doesn't mark as part of a phrase
+UNMARKED_WORDS = {'and', 'now', 'right', 'eod', 'eom', 'eoy'}
+
+
 def natural_parser(date_time, settings):
     """
     This is a bit clever. We've found a python lib that can translate
@@ -40,19 +44,22 @@ def natural_parser(date_time, settings):
         3: get_full_format(settings)
     }
 
-    # remove the first character and send attempt to translate it
+    # remove the quotes and attempt to translate it
     date_time_to_parse = date_time[1:-1]
     cal = parsedatetime.Calendar()
-    date_time_parsed = cal.parseDT(date_time_to_parse)
+    date_time_parsed, error_code = cal.parseDT(date_time_to_parse)
 
-    # This parser handily sends back an error code, just in case
-    error_code = date_time_parsed[1]
+    # parseDT skips words it doesn't know, so "3 days after christmas" would quietly be 3 days from today.
+    # Blank out the phrases nlp understood; any other word left over makes it an invalid date.
+    unread = date_time_to_parse
+    for _, _, start, end, _ in cal.nlp(date_time_to_parse) or ():
+        unread = unread[:start] + ' ' * (end - start) + unread[end:]
 
-    if error_code == 0:
+    if error_code == 0 or set(re.findall(r'\w+', unread.lower())) - UNMARKED_WORDS:
         raise ValueError
     if error_code == 1:  # a date alone is at midnight, like typed dates, not parsedatetime's 9am
-        return datetime.combine(date_time_parsed[0], datetime.min.time()), format_map[1]
-    return date_time_parsed[0], format_map[error_code]
+        return datetime.combine(date_time_parsed, datetime.min.time()), format_map[1]
+    return date_time_parsed, format_map[error_code]
 
 
 def get_date_from_week_number(date_time):

@@ -1118,6 +1118,8 @@ Yup! A natural date language parser! You can even combine it with the usual synt
 
 This is a little bit experimental, but I thought I’d throw it in for a bit of fun.
 
+Every word has to be one the parser understands. If one isn’t, you get _Invalid Date/time_ rather than a guess, so **dcalc "3 days after christmas"** doesn’t quietly turn into 3 days from today.
+
 ### Troubleshooting
 - **No result for an expression you’re sure is right:** check the [settings](#settings). Dates have to be typed in the chosen format, so _25.12.14_ won’t work when the format is _mm/dd/yyyy_.
 - **No result after a word:** leave a space between words. **today wd** works, **todaywd** doesn’t.

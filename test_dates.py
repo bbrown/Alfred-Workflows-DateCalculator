@@ -149,6 +149,12 @@ assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == 
 assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 
+# A quoted phrase with a word the parser doesn't know is an error, not a guess that leaves the word out
+for phrase in ('3 days after christmas', 'first monday of next month', 'last day of the month', 'day after tomorrow'):
+    assert dcalc('"%s"' % phrase) == 'error: Invalid Date/time', phrase
+for phrase in ('6 weeks and 4 days after next wednesday', '4 hours 8 minutes after 4pm', 'two weeks from now', 'friday, 5pm'):
+    assert not dcalc('"%s"' % phrase).startswith('error'), phrase
+
 # Alfred's help (the readme in info.plist) is a copy of README.md, so they can't drift apart
 here = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(here, 'info.plist'), 'rb') as plist, open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
