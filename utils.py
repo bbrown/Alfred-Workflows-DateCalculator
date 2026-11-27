@@ -52,12 +52,13 @@ def natural_parser(date_time, settings):
     # remove the quotes and attempt to translate it
     date_time_to_parse = date_time[1:-1]
     cal = parsedatetime.Calendar()
-    date_time_parsed, error_code = cal.parseDT(date_time_to_parse)
+    now = datetime.now()  # the clock the rest of the workflow reads, rather than parsedatetime's own
+    date_time_parsed, error_code = cal.parseDT(date_time_to_parse, sourceTime=now)
 
     # parseDT skips words it doesn't know, so "3 days after christmas" would quietly be 3 days from today.
     # Blank out the phrases nlp understood; any other word left over makes it an invalid date.
     unread = date_time_to_parse
-    for _, _, start, end, _ in cal.nlp(date_time_to_parse) or ():
+    for _, _, start, end, _ in cal.nlp(date_time_to_parse, sourceTime=now) or ():
         unread = unread[:start] + ' ' * (end - start) + unread[end:]
 
     if error_code == 0 or set(re.findall(r'\w+', unread.lower())) - UNMARKED_WORDS:
