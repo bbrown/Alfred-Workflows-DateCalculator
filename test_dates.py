@@ -149,6 +149,15 @@ assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == 
 assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 
+# Working days between two dates count the days after the earlier one, up to and including the later one,
+# that aren't excluded, so they undo a sum with the same exclusions
+assert dcalc('26.11.26 + 20d x weekends') == '24.12.26'
+assert dcalc('24.12.26 - 26.11.26 x weekends') == '20 days'
+assert dcalc('26.11.26 - 24.12.26 x weekends 30.11.26') == '19 days'
+assert dcalc('30.11.26 - 27.11.26 x weekends') == '1 day'
+assert dcalc('27.11.26 - 28.11.26 x weekends') == '0 days'
+assert dcalc('24.12.26 - 26.11.26 x weekends w') == 'error: Invalid Command'  # the answer is always days
+
 # A time answer that lands on another day shows the date too
 assert dcalc('09:00 + 2h') == '11:00'
 assert dcalc('23:00 + 2h') == (date.today() + timedelta(days=1)).strftime('%d.%m.%y@01:00')

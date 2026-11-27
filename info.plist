@@ -893,6 +893,7 @@ Type **dcalc** followed by an expression. The examples below use the default dat
 | **dcalc christmas - today** | How long until Christmas |
 | **dcalc today + 6d** | The date six days from now |
 | **dcalc today + 20d x weekends** | The date 20 working days from now |
+| **dcalc christmas - today x weekends** | The working days until Christmas |
 | **dcalc time + 6h 8M** | The time 6 hours 8 minutes from now |
 | **dcalc today wn** | This week’s number |
 | **dcalc next tue** | Next Tuesday’s date |
@@ -997,6 +998,8 @@ Add units at the end to choose how the answer is shown. With one unit you get a 
 
 You can use any of the [units](#adding-and-subtracting), in any order. Without units, the answer leaves out anything that’s zero, and seconds. Personally, I always use _long_ because it’s the most precise.
 
+To count only working days, add [exclusions](#exclusions).
+
 ### Week numbers and other details
 Put one of these after a date to find out something about it instead:
 
@@ -1058,7 +1061,9 @@ After **exclude** (or **x** for short) you can list any mix of:
 
 For example, **dcalc today + 20d x weekends tuesdays** is 20 days from now, not counting weekends and Tuesdays, and **dcalc today + 3d x all except tuesdays** is three Tuesdays from now.
 
-Exclusions work when taking days away, too: **dcalc today - 20d x weekends** is 20 working days ago. They don’t work when subtracting one date from another.
+Exclusions work when taking days away, too: **dcalc today - 20d x weekends** is 20 working days ago.
+
+They also count the working days between two dates. **dcalc christmas - today x weekends** counts the days after today, up to and including Christmas, that aren’t at a weekend. The answer is always in days, so leave out the units.
 
 ### Anniversaries
 Anniversaries are dates you name, then use like any other date. Using the name gives the next time it comes round; put **^** in front for the original date:

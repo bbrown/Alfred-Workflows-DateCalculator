@@ -47,13 +47,23 @@ def do_subtraction(command, settings):
     for operand in command.operandList2:
         date_time_2 = delta_arithmetic(date_time_2, operand)
 
+    if hasattr(command, "exclusionCommands"):
+        # the days after the earlier date, up to and including the later one, like a plain count of days
+        excluded = get_exclusions(command, settings)
+        first, last = sorted((date_time_1.date(), date_time_2.date()))
+        return pluralize(sum(1 for day in days_after(first, last) if not excluded(day)), 'day')
+
     return normalised_days(command, date_time_1, date_time_2)
 
 
-def exclusion_check(original_date_time, date_time, command, settings):
-    if not hasattr(command, "exclusionCommands"):
-        return date_time
+def days_after(start, end):
+    """The days after start, up to and including end, going back in time when end is earlier."""
+    step = 1 if end >= start else -1
+    return (start + timedelta(days=n) for n in range(step, (end - start).days + step, step))
 
+
+def get_exclusions(command, settings):
+    """Returns a test for whether a day is one the exclusions after "x" leave out."""
     weekdays, dates, ranges = set(), set(), []
     for exclusion in command.exclusionCommands.exclusionList:
         if hasattr(exclusion, "exclusionRange"):
@@ -67,15 +77,17 @@ def exclusion_check(original_date_time, date_time, command, settings):
     if len(weekdays) >= 7:
         raise CalculationError("All days excluded")
 
-    def excluded(day):
-        return day.weekday() in weekdays or day in dates or any(low <= day <= high for low, high in ranges)
+    return lambda day: day.weekday() in weekdays or day in dates or any(low <= day <= high for low, high in ranges)
+
+
+def exclusion_check(original_date_time, date_time, command, settings):
+    if not hasattr(command, "exclusionCommands"):
+        return date_time
+    excluded = get_exclusions(command, settings)
 
     # Count the excluded days the sum passed, after the starting day. Whole days, so a typed time
     # can't move one in or out.
-    start = original_date_time.date()
-    first, last = sorted((start, date_time.date()))
-    passed = (first + timedelta(days=n) for n in range((last - first).days + 1))
-    extra_days = sum(1 for day in passed if day != start and excluded(day))
+    extra_days = sum(1 for day in days_after(original_date_time.date(), date_time.date()) if excluded(day))
 
     # Then go on a day at a time, back in time when taking days away, until as many days that aren't excluded
     # make up for them.

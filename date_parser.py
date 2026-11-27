@@ -120,8 +120,9 @@ class DateParser:
 
         class Commands(str):
             grammar = [
+                # with exclusions the answer is a count of days, so they take the place of the format
                 (attr("dateTime1", DateTime), attr("operandList1", OperandList), "-", attr("dateTime2", DateTime),
-                 attr("operandList2", OperandList), attr("format", Format)),
+                 attr("operandList2", OperandList), [attr("exclusionCommands", ExclusionCommands), attr("format", Format)]),
                 # exclusions and the format are both optional, so "today", "today wd" and "today + 5d x sat wd" all fit
                 (attr("dateTime", DateTime), attr("operandList", OperandList),
                  optional(attr("exclusionCommands", ExclusionCommands)), optional(attr("dateFormat", DateFormat)))
