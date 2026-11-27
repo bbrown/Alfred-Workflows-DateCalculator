@@ -89,10 +89,11 @@ So **dcalc \*+6d** is the date six days from now.
 | **thanksgiving** | Thanksgiving (US) |
 | **start bst**, **end bst** | The start and end of British Summer Time |
 | **start dst**, **end dst** | The start and end of daylight saving time in the US |
+| **friday 13** | Friday the 13th |
 | **next month** | The first day of next month |
 | **start year**, **end year** | The first and last days of this year |
 
-Add a year for the one in that year: **dcalc easter 2030**. That works for all of these except **next month**, **start year** and **end year**.
+Add a year for the one in that year, or the first, for **friday 13**: **dcalc easter 2030**. That works for all of these except **next month**, **start year** and **end year**.
 
 Christmas is one of the [anniversaries](#anniversaries), so you can change it, or add your own.
 

@@ -143,7 +143,7 @@ def next_passover(settings, year=None):
 
 
 # The named dates that come round every year. Each gives the next one, or with a year after the name,
-# as in "easter 2030", the one in that year.
+# as in "easter 2030", the first one in that year.
 YEARLY_DATES = {
     "easter": next_rule(byeaster=0),
     "start bst": next_rule(bymonth=3, byweekday=SU(-1)),
@@ -157,7 +157,8 @@ YEARLY_DATES = {
     "mutter": next_rule(bymonth=5, byweekday=SU(2)),
     "thanksgiving": next_rule(bymonth=11, byweekday=TH(4)),  # in the US
     "start dst": next_rule(bymonth=3, byweekday=SU(2)),  # daylight saving time in the US
-    "end dst": next_rule(bymonth=11, byweekday=SU(1))
+    "end dst": next_rule(bymonth=11, byweekday=SU(1)),
+    "friday 13": next_rule(bymonthday=13, byweekday=FR)
 }
 
 DATE_FUNCTION_MAP = {

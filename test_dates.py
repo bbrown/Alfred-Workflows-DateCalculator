@@ -155,6 +155,7 @@ assert dcalc('passover 2027') == '22.04.27'
 assert dcalc('mlk 2030 wd') == 'MON'
 assert dcalc('christmas 2030') == '25.12.30'
 assert (dcalc('thanksgiving 2026'), dcalc('start dst 2027'), dcalc('end dst 2027')) == ('26.11.26', '14.03.27', '07.11.27')
+assert (dcalc('friday 13 2027'), dcalc('friday 13 wd')) == ('13.08.27', 'FRI')
 assert dcalc('20.04.30 + 1d x easter 2030') == '22.04.30'
 assert dcalc('leap 2027') == 'error: Invalid Date/time'  # no 29 February that year
 assert dcalc('today 2030') == 'error: Invalid Command'
