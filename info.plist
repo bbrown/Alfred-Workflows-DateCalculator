@@ -942,6 +942,8 @@ So **dcalc \*+6d** is the date six days from now.
 | **next month** | The first day of next month |
 | **start year**, **end year** | The first and last days of this year |
 
+Add a year for the one in that year: **dcalc easter 2030**. That works for all of these except **next month**, **start year** and **end year**.
+
 Christmas is one of the [anniversaries](#anniversaries), so you can change it, or add your own.
 
 ### Adding and subtracting
@@ -1071,6 +1073,7 @@ Anniversaries are dates you name, then use like any other date. Using the name g
 | Type this | To get |
 |---|---|
 | **dcalc wedding** | The next wedding anniversary |
+| **dcalc wedding 2030** | The wedding anniversary in 2030 |
 | **dcalc wedding - today** | How long until it |
 | **dcalc today - ^wedding** | How long you’ve been married |
 

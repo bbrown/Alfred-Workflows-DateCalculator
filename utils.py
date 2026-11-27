@@ -3,7 +3,7 @@ import re
 from date_format_mappings import WN_FUNCTION_REGEX, DAYS
 
 from date_functions import DATE_FUNCTION_MAP, get_date_format, get_time_format, get_full_format, \
-    get_time_preprocessor
+    get_time_preprocessor, YEARLY_DATES
 from dateutil.rrule import rrule, YEARLY
 
 
@@ -19,12 +19,17 @@ def get_anniversary(date_object):
     return anniversary_rule.after(datetime.combine(datetime.today(), midnight))
 
 
-def process_macros(date_time_str, anniversaries):
-    """The date of a saved anniversary: its next one, or with "^" in front, the original date. None if not saved."""
+def process_macros(date_time_str, anniversaries, year=None):
+    """
+    The date of a saved anniversary: its next one, the one in a year given, or with "^" in front, the original date.
+    None if not saved.
+    """
     name = date_time_str.lstrip("^")
     if name not in anniversaries:
         return None
     anniversary_date = datetime.fromisoformat(anniversaries[name])  # saved with isoformat()
+    if year:
+        return anniversary_date.replace(year=year)  # a ValueError for 29 February in a year without one
     return anniversary_date if date_time_str.startswith("^") else get_anniversary(anniversary_date)
 
 
@@ -92,10 +97,17 @@ def convert_date_time(date_time, settings):
 
     date_time_str = str(date_time)
 
+    # A yearly date or an anniversary may have a year after it, as in "easter 2030". The parser only allows
+    # one there, so a typed date ending in a year, such as "25 Dec 2026", doesn't match a name below.
+    name, year = re.fullmatch(r'(.*?)(?:\s+(\d{4}))?', date_time_str.lower()).groups()
+    year = int(year) if year else None
+    if year and name in YEARLY_DATES:
+        return YEARLY_DATES[name](settings, year)
+
     if date_time_str.lower() in DATE_FUNCTION_MAP.keys():
         return DATE_FUNCTION_MAP[date_time_str.lower()](settings)  # its dates are at midnight, like typed ones
 
-    anniversary_date = process_macros(date_time_str.lower(), settings['anniversaries'])
+    anniversary_date = process_macros(name, settings['anniversaries'], year)
 
     if anniversary_date is not None:
         return datetime.combine(anniversary_date, datetime.min.time()), date_format

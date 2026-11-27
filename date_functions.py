@@ -74,10 +74,14 @@ def days_from_today(delta):
 
 
 def next_rule(**rule):
-    """Returns a function for the next date after today that a yearly rrule picks, such as the last Sunday in March."""
-    def _next_rule(settings):
-        today = _get_current_date()  # starting at midnight, so the dates fall at midnight and today's own doesn't count
-        return rrule(freq=YEARLY, dtstart=today, **rule).after(today), get_date_format(settings)
+    """
+    Returns a function for the next date after today that a yearly rrule picks, such as the last Sunday in March,
+    or given a year, the first one in that year.
+    """
+    def _next_rule(settings, year=None):
+        # From midnight, so the dates fall at midnight and today's own doesn't count.
+        after = datetime(year - 1, 12, 31) if year else _get_current_date()
+        return rrule(freq=YEARLY, dtstart=after, **rule).after(after), get_date_format(settings)
     return _next_rule
 
 
@@ -93,8 +97,9 @@ def next_month(settings):
     return _get_current_date() + relativedelta(months=1, day=1), get_date_format(settings)
 
 
-def next_passover(settings):
+def next_passover(settings, year=None):
     """
+    The next Passover, or given a year, the one in that year.
     Credit goes to programmingpraxis.com for supplying
     the function for working out the date of the passover
     """
@@ -127,15 +132,30 @@ def next_passover(settings):
 
         return n
 
-    # Just need the year of the current date
+    if year:
+        return calc_passover_year(year), get_date_format(settings)
+
+    # this year's, unless it's today or already gone, like the other named dates
     passover_date = calc_passover_year(_get_current_date().year)
+    if passover_date <= _get_current_date():
+        passover_date = calc_passover_year(_get_current_date().year + 1)
+    return passover_date, get_date_format(settings)
 
-    # if it's today or already gone, we need the following year's, like the other named dates
-    if passover_date > _get_current_date():
-        return passover_date, get_date_format(settings)
-    else:
-        return calc_passover_year(_get_current_date().year + 1), get_date_format(settings)
 
+# The named dates that come round every year. Each gives the next one, or with a year after the name,
+# as in "easter 2030", the one in that year.
+YEARLY_DATES = {
+    "easter": next_rule(byeaster=0),
+    "start bst": next_rule(bymonth=3, byweekday=SU(-1)),
+    "end bst": next_rule(bymonth=10, byweekday=SU(-1)),
+    "passover": next_passover,
+    "pancake day": next_rule(byeaster=-47),
+    "lent": next_rule(byeaster=-46),
+    "mlk": next_rule(bymonth=1, byweekday=MO(3)),
+    "mum": next_rule(byeaster=-21),  # Mothering Sunday in the UK
+    "mom": next_rule(bymonth=5, byweekday=SU(2)),  # Mother's Day in the US
+    "mutter": next_rule(bymonth=5, byweekday=SU(2))
+}
 
 DATE_FUNCTION_MAP = {
 
@@ -150,19 +170,10 @@ DATE_FUNCTION_MAP = {
     "<": yesterday,
     "tomorrow": tomorrow,
     ">": tomorrow,
-    "easter": next_rule(byeaster=0),
-    "start bst": next_rule(bymonth=3, byweekday=SU(-1)),
-    "end bst": next_rule(bymonth=10, byweekday=SU(-1)),
     "start year": start_of_year,
     "end year": end_of_year,
     "next month": next_month,
-    "passover": next_passover,
-    "pancake day": next_rule(byeaster=-47),
-    "lent": next_rule(byeaster=-46),
-    "mlk": next_rule(bymonth=1, byweekday=MO(3)),
-    "mum": next_rule(byeaster=-21),  # Mothering Sunday in the UK
-    "mom": next_rule(bymonth=5, byweekday=SU(2)),  # Mother's Day in the US
-    "mutter": next_rule(bymonth=5, byweekday=SU(2))
+    **YEARLY_DATES
 }
 
 for n, day in enumerate(DAYS):

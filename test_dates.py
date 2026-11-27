@@ -149,6 +149,16 @@ assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == 
 assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 
+# A year after a yearly date or an anniversary gives the one in that year
+assert dcalc('easter 2030') == '21.04.30'
+assert dcalc('passover 2027') == '22.04.27'
+assert dcalc('mlk 2030 wd') == 'MON'
+assert dcalc('christmas 2030') == '25.12.30'
+assert dcalc('20.04.30 + 1d x easter 2030') == '22.04.30'
+assert dcalc('leap 2027') == 'error: Invalid Date/time'  # no 29 February that year
+assert dcalc('today 2030') == 'error: Invalid Command'
+assert dcalc('25 Dec 2026 + 1d', settings(**{'date-format': 'dd mmm yyyy'})) == '26 Dec 2026'  # not a name
+
 # Working days between two dates count the days after the earlier one, up to and including the later one,
 # that aren't excluded, so they undo a sum with the same exclusions
 assert dcalc('26.11.26 + 20d x weekends') == '24.12.26'

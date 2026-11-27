@@ -3,9 +3,12 @@ import re
 from date_format_mappings import WN_FUNCTION_REGEX
 from date_formatters import DATE_FORMATTERS_MAP
 from date_functions import DATE_FUNCTION_MAP, get_date_format_regex, get_time_format_regex, get_full_format_regex, \
-    EXCLUSION_MAP
+    EXCLUSION_MAP, YEARLY_DATES
 
 from pypeg2 import List, attr, maybe_some, optional, parse, some
+
+# the year that may follow a yearly named date or an anniversary, as in "easter 2030"
+OPTIONAL_YEAR = r'(?:\s+\d{4}(?!\d))?'
 
 
 class DateParser:
@@ -55,7 +58,8 @@ class DateParser:
         # ^mybirthday ===> the date I was born
         # A name may not run on into more letters, so "bday" can't match the start of "bdaytwo".
         # With no anniversaries, (?!) matches nothing, where an empty pattern would match everything.
-        return r'\^?(?:%s)(?![a-z_])' % ('|'.join(map(re.escape, settings['anniversaries'])) or '(?!)')
+        names = '|'.join(map(re.escape, settings['anniversaries'])) or '(?!)'
+        return r'\^?(?:%s)(?![a-z_])' % names + OPTIONAL_YEAR
 
     @staticmethod
     def _get_date_formatters():
@@ -72,7 +76,8 @@ class DateParser:
     def _get_date_functions():
         # A name ending in a letter may not run on into more letters: "next mon" mustn't match the start of
         # "next month", nor "mum" the start of an anniversary called "mum_bday". Symbols are exempt, so "*wd" works.
-        return '|'.join(re.escape(x) + ('(?![a-z_])' if x[-1].isalpha() else '') for x in DATE_FUNCTION_MAP)
+        return '|'.join(re.escape(x) + ('(?![a-z_])' if x[-1].isalpha() else '') +
+                        (OPTIONAL_YEAR if x in YEARLY_DATES else '') for x in DATE_FUNCTION_MAP)
 
     @staticmethod
     def _get_exclusion_macros():
