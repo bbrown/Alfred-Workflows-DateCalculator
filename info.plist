@@ -902,6 +902,8 @@ Type **dcalc** followed by an expression. The examples below use the default dat
 
 The workflow reads the expression as you type, so you’ll see _. . ._ or messages such as _Invalid Command_ until it’s complete. Then it shows the result. Under a date, it shows the day of the week, the week number and how far away it is. Press Enter to copy the result and paste it into the app you were using.
 
+For worked examples of every kind of calculation, with the reasoning behind them, see the [cookbook](https://github.com/bbrown/Alfred-Workflows-DateCalculator/blob/master/COOKBOOK.md).
+
 ### Dates, times and names
 Anywhere a date or time can go, you can use any of these.
 
@@ -1174,7 +1176,7 @@ Alfred shows a copy of this README as the workflow's help, kept in `info.plist`.
 
     /usr/bin/python3 sync_readme.py
 
-`test_dates.py` fails if the two copies differ.
+`test_dates.py` fails if the two copies differ. It also runs every example in `COOKBOOK.md` and fails if one gives a different answer, so when a change alters an answer on purpose, update the cookbook too.
 
 The workflow carries its own copies of dateutil, parsedatetime, pypeg2 and six. The first three are changed, so after replacing one with a newer version, make the same change again:
 

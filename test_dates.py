@@ -1,4 +1,5 @@
-"""Self-check for the date maths, and that info.plist matches the README and code: /usr/bin/python3 test_dates.py
+"""Self-check for the date maths, that info.plist matches the README and code, and that every example in
+COOKBOOK.md gives the answer it shows: /usr/bin/python3 test_dates.py
 
 Each check is a case that once gave a wrong answer. The dates are fixed, so the checks don't depend on today.
 """
@@ -7,6 +8,7 @@ import copy
 import io
 import os
 import plistlib
+import time
 from datetime import date, datetime, timedelta
 
 import date_calculator
@@ -241,4 +243,62 @@ for obj in info['objects']:
         assert os.path.exists(os.path.join(here, words[1])), words
         assert words[1] != 'format_list.py' or words[2] in SETTING_MAPPINGS, words
 
-print('test_dates.py self-check passed')
+
+# Every example in COOKBOOK.md, so the cookbook can't drift from what the workflow does. As the cookbook says,
+# they assume the default settings unless a block names others, a birthday saved as bday, and this clock, in UTC.
+class CookbookClock(datetime):
+    @classmethod
+    def now(cls, tz=None):
+        return cls(2026, 11, 26, 14, 30)  # a Thursday
+
+    @classmethod
+    def today(cls):
+        return cls.now()
+
+
+class CookbookDay(date):
+    @classmethod
+    def today(cls):
+        return cls(2026, 11, 26)
+
+
+real_tz = os.environ.get('TZ')
+os.environ['TZ'] = 'UTC'  # Unix times are local
+time.tzset()
+date_functions.datetime = utils.datetime = CookbookClock
+utils.date = date_calculator.date = CookbookDay
+
+with open(os.path.join(here, 'COOKBOOK.md'), encoding='utf-8') as f:
+    cookbook = f.read().split('\n')
+block_settings, prompt, examples = None, None, 0
+for number, line in enumerate(cookbook, 1):
+    where = 'COOKBOOK.md line %d' % number
+    if block_settings is None:
+        if line.startswith('```'):  # every fenced block is a dcalc block, so no example can miss this check
+            assert line.split()[0] == '```dcalc', where + ": a code block that isn't marked dcalc"
+            block_settings = settings(**dict(pair.split('=', 1) for pair in line.split()[1:]))
+            block_settings['anniversaries']['bday'] = '1990-03-15T00:00:00'
+    elif line == '```':
+        assert prompt is None, where + ': the block ends before the answer'
+        block_settings = None
+    elif line.startswith(('dcalc ', 'dcalcset list ')) and prompt is None:
+        prompt = line
+    else:
+        assert prompt and line.startswith('→ '), where + ': not an example, or an example without its answer'
+        if prompt.startswith('dcalcset list '):
+            answer = dcalcset_list(prompt[len('dcalcset list '):], block_settings)
+        else:
+            answer = dcalc(prompt[len('dcalc '):], block_settings)
+        assert answer == line[2:], '%s: %s gives %r, not %r' % (where, prompt, answer, line[2:])
+        prompt, examples = None, examples + 1
+assert block_settings is None and examples, 'COOKBOOK.md has an unclosed block, or no examples'
+
+date_functions.datetime = utils.datetime = datetime
+utils.date = date_calculator.date = date
+if real_tz is None:
+    del os.environ['TZ']
+else:
+    os.environ['TZ'] = real_tz
+time.tzset()
+
+print('test_dates.py self-check passed, with %d cookbook examples' % examples)
