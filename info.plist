@@ -977,7 +977,7 @@ What does that mess do? It takes 18.12.12, adds 5 years, 9 days and 3 weeks, tak
 To skip weekends or other days while counting, see [Exclusions](#exclusions).
 
 ### Time between two dates
-Subtract one date from another to get the time between them. The order doesn’t matter.
+Subtract one date from another to get the time between them. The order doesn’t matter. A date on its own means the start of that day, so **dcalc christmas - now** is the time until Christmas morning.
 
 **dcalc 25.12.14 - 18.01.14** gives _11 months, 1 week_
 

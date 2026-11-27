@@ -39,7 +39,7 @@ def get_time_preprocessor(settings):
 
 
 def _get_current_date():
-    return datetime.combine(datetime.today(), datetime.max.time())
+    return datetime.combine(datetime.today(), datetime.min.time())
 
 
 def _get_current_time():
@@ -76,7 +76,8 @@ def days_from_today(delta):
 def next_rule(**rule):
     """Returns a function for the next date after today that a yearly rrule picks, such as the last Sunday in March."""
     def _next_rule(settings):
-        return rrule(freq=YEARLY, **rule).after(_get_current_date()), get_date_format(settings)
+        today = _get_current_date()  # starting at midnight, so the dates fall at midnight and today's own doesn't count
+        return rrule(freq=YEARLY, dtstart=today, **rule).after(today), get_date_format(settings)
     return _next_rule
 
 
@@ -129,8 +130,8 @@ def next_passover(settings):
     # Just need the year of the current date
     passover_date = calc_passover_year(_get_current_date().year)
 
-    # if we've already gone past it then we need to try for the following year.
-    if passover_date >= _get_current_date():
+    # if it's today or already gone, we need the following year's, like the other named dates
+    if passover_date > _get_current_date():
         return passover_date, get_date_format(settings)
     else:
         return calc_passover_year(_get_current_date().year + 1), get_date_format(settings)

@@ -52,9 +52,28 @@ def dcalcset_list(query, workflow_settings):
     return out.getvalue().strip()
 
 
-# Holiday dates sit at the end of the day, like typed dates, so countdowns aren't a day short
-for name in ('easter', 'passover', 'end year', 'mom'):
-    assert utils.convert_date_time(name, settings())[0].time() == datetime.max.time(), name
+# Dates without a time, typed, named or quoted, are at midnight, so countdowns aren't a day short or long
+for name in ('easter', 'passover', 'end year', 'mom', 'christmas', '"next friday"', 'wn 7'):
+    assert utils.convert_date_time(name, settings())[0].time() == datetime.min.time(), name
+assert dcalc('25.12.26 - 24.12.26@12:00') == '12 hours'  # was 1 day, 11 hours, 59 minutes
+assert dcalc('26.11.26 + 1h') == '26.11.26'  # was the next day
+
+
+class Christmas2026(datetime):  # the clock anniversaries read
+    @classmethod
+    def today(cls):
+        return cls(2026, 12, 25, 10, 0)
+
+
+# On the day itself, a name gives the next one, a year away, whatever time an anniversary was saved with
+real_current_date, real_datetime = date_functions._get_current_date, utils.datetime
+date_functions._get_current_date, utils.datetime = lambda: datetime(2027, 3, 28), Christmas2026
+assert dcalc('easter') == '16.04.28'
+date_functions._get_current_date = lambda: datetime(2027, 4, 22)
+assert dcalc('passover') == '11.04.28'
+for saved in ('1900-12-25T00:30:00', '2014-12-25T23:59:59.999999'):
+    assert dcalc('xmas', settings(anniversaries={'xmas': saved})) == '25.12.27', saved
+date_functions._get_current_date, utils.datetime = real_current_date, real_datetime
 
 # Decimals use the real lengths of years and months
 assert dcalc('20.12.26 - 01.01.26 y') == '0.97 years'
@@ -96,7 +115,7 @@ assert dcalc('wn 2015 5 sun - 08.02.15') == '1 week'
 # Format options read the answer itself, so a two-digit year can't move it into 1969-2068 (25.12.1900 was a Tuesday)
 assert dcalc('^christmas wd') == 'TUE'
 assert dcalc('01.01.26 + 50y wd') == 'WED'
-assert dcalc('25.12.26 iso') == '2026-12-25T23:59:59'  # whole seconds; a date sits at the end of its day
+assert dcalc('25.12.26 iso') == '2026-12-25T00:00:00'  # whole seconds; a date is at midnight
 
 
 class December29(date):  # 29.12.2025 is in ISO week 1 of 2026

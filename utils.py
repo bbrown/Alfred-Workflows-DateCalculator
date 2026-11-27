@@ -12,10 +12,11 @@ from parsedatetime import parsedatetime
 
 
 def get_anniversary(date_object):
-    anniversary_rule = rrule(bymonthday=date_object.day, bymonth=date_object.month, freq=YEARLY, dtstart=date_object)
-    current_date = datetime.today()
-    anniversary_date = anniversary_rule.after(current_date, inc=False)
-    return datetime.combine(anniversary_date, datetime.min.time())
+    # All at midnight, whatever time was saved, so today's own anniversary never counts: its next is a year away.
+    midnight = datetime.min.time()
+    anniversary_rule = rrule(bymonthday=date_object.day, bymonth=date_object.month, freq=YEARLY,
+                             dtstart=datetime.combine(date_object, midnight))
+    return anniversary_rule.after(datetime.combine(datetime.today(), midnight))
 
 
 def process_macros(date_time_str, anniversaries):
@@ -49,8 +50,9 @@ def natural_parser(date_time, settings):
 
     if error_code == 0:
         raise ValueError
-    else:
-        return date_time_parsed[0], format_map[error_code]
+    if error_code == 1:  # a date alone is at midnight, like typed dates, not parsedatetime's 9am
+        return datetime.combine(date_time_parsed[0], datetime.min.time()), format_map[1]
+    return date_time_parsed[0], format_map[error_code]
 
 
 def get_date_from_week_number(date_time):
@@ -79,20 +81,17 @@ def convert_date_time(date_time, settings):
 
     #How about a date from a week number and a year
     if date_time.startswith("wn"):
-        return datetime.combine(get_date_from_week_number(date_time), datetime.max.time()), date_format
+        return datetime.combine(get_date_from_week_number(date_time), datetime.min.time()), date_format
 
     date_time_str = str(date_time)
 
     if date_time_str.lower() in DATE_FUNCTION_MAP.keys():
-        date_and_time, output_format = DATE_FUNCTION_MAP[date_time_str.lower()](settings)
-        if output_format == date_format:  # date-only results sit at the end of the day, like typed dates below
-            date_and_time = datetime.combine(date_and_time, datetime.max.time())
-        return date_and_time, output_format
+        return DATE_FUNCTION_MAP[date_time_str.lower()](settings)  # its dates are at midnight, like typed ones
 
     anniversary_date = process_macros(date_time_str.lower(), settings['anniversaries'])
 
     if anniversary_date is not None:
-        return datetime.combine(anniversary_date, datetime.max.time()), date_format
+        return datetime.combine(anniversary_date, datetime.min.time()), date_format
 
     # Try the date and time, then the date, then the time. Upper case, because strptime only reads AM and PM
     # in capitals, and we don't want to make the user type them that way.
@@ -102,7 +101,7 @@ def convert_date_time(date_time, settings):
     except ValueError:
         pass
     try:
-        return datetime.combine(datetime.strptime(date_time_str, date_format), datetime.max.time()), date_format
+        return datetime.strptime(date_time_str, date_format), date_format  # at midnight
     except ValueError:
         pass
     return datetime.combine(datetime.today(), datetime.strptime(date_time_str, time_format).time()), time_format
