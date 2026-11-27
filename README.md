@@ -304,6 +304,8 @@ A list of things that made my first attempt at Python programming possible:
 - And finally, and by no means least – Mr Smirnoff for discovering how to bottle patience.
 
 ### Version history
+**4.3** (unreleased) – Bug fixes. Long exclusions, such as a whole year, no longer give _That’s too far away_. Details after a calculation now use the exact answer, so _01.01.26 + 50y wd_ and _time + 24h wd_ give the right day, and _iso_ gives the right time, to the second. _All days excluded_ and _That’s too far away_ now show as messages, so Enter no longer copies them. The _date_ keyword is gone; type _dcalc date_ instead. The workflow is also less than half the size, and ready for newer versions of Python.
+
 **4.2** – The date, time and date‑and‑time formats are now in _Configure Workflow_ as well as the _dcalcset_ keywords. The _dcalcshow date format_ and _dcalcshow time format_ keywords are gone, because the lists mark the current choice with a \*. Formats chosen in an earlier version go back to the defaults, so pick them again once. Anniversaries are kept.
 
 **4.1** – Bug fixes. Countdowns to holidays such as _easter - today_ are no longer a day short, decimal years and months are no longer too high, month counts no longer drift after a short month, the _s_ format shows seconds, and _next month_ works. Also fixed: week numbers around New Year, exclusions when a time is given, anniversaries whose names start with another name, and adding an anniversary overwriting one with the same name in different capitals. Exclusions are documented again and now work when taking days away, and Alfred's built-in help now matches this README. Needs Python 3.8 or later.
