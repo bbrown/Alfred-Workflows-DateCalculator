@@ -938,7 +938,9 @@ So **dcalc \*+6d** is the date six days from now.
 | **mum** | Mothering Sunday (UK) |
 | **mom** or **mutter** | Mother’s Day (US and Germany) |
 | **mlk** | Martin Luther King Jr. Day |
+| **thanksgiving** | Thanksgiving (US) |
 | **start bst**, **end bst** | The start and end of British Summer Time |
+| **start dst**, **end dst** | The start and end of daylight saving time in the US |
 | **next month** | The first day of next month |
 | **start year**, **end year** | The first and last days of this year |
 

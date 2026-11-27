@@ -154,7 +154,10 @@ YEARLY_DATES = {
     "mlk": next_rule(bymonth=1, byweekday=MO(3)),
     "mum": next_rule(byeaster=-21),  # Mothering Sunday in the UK
     "mom": next_rule(bymonth=5, byweekday=SU(2)),  # Mother's Day in the US
-    "mutter": next_rule(bymonth=5, byweekday=SU(2))
+    "mutter": next_rule(bymonth=5, byweekday=SU(2)),
+    "thanksgiving": next_rule(bymonth=11, byweekday=TH(4)),  # in the US
+    "start dst": next_rule(bymonth=3, byweekday=SU(2)),  # daylight saving time in the US
+    "end dst": next_rule(bymonth=11, byweekday=SU(1))
 }
 
 DATE_FUNCTION_MAP = {
