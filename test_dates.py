@@ -178,6 +178,8 @@ assert dcalc('26.11.26 + 1mo') == dcalc('26.11.26 + 1m') == '26.12.26'
 assert dcalc('26.11.26 + 5 days x weekends') == dcalc('26.11.26 + 5d x weekends') == '03.12.26'
 assert dcalc('26.11.26 + 5 dayz') == 'error: Invalid Command'
 
+assert (dcalc('25.12.14 doy'), dcalc('31.12.24 doy'), dcalc('01.02.26 doy')) == ('359', '366', '32')
+
 # Unix times, read with @ and shown with unix, in local time
 assert dcalc('@1795689600 unix') == '1795689600'
 assert dcalc('@0 + 1d unix') == '86400'

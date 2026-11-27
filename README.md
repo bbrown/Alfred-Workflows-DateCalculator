@@ -163,6 +163,7 @@ Put one of these after a date to find out something about it instead:
 | **wn** or **!** | The ISO week number | **dcalc 25.12.14 wn** | _52_ |
 | **wd** | The day of the week | **dcalc 25.12.14 wd** | _THU_ |
 | **wdi** | The day of the week as a number, Monday being 1 | **dcalc 25.12.14 wdi** | _4_ |
+| **doy** | The day of the year, 1 January being 1 | **dcalc 25.12.14 doy** | _359_ |
 | **iso** | The date and time in ISO 8601 format | **dcalc now iso** | |
 | **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
 | **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |

@@ -18,6 +18,10 @@ def week_day_in_isoformat(date_time):
     return str(date_time.isoweekday())
 
 
+def day_of_year(date_time):
+    return str(date_time.timetuple().tm_yday)
+
+
 def iso_format(date_time):
     return date_time.isoformat(timespec='seconds')
 
@@ -44,6 +48,7 @@ DATE_FORMATTERS_MAP = {
     "wn": week_number,
     "wd": week_day,
     "!": week_number,
+    "doy": day_of_year,
     "iso": iso_format,
     "unix": unix_time,
     "sign": zodiac_sign
