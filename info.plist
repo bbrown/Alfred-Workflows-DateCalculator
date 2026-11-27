@@ -1064,7 +1064,7 @@ After **exclude** (or **x** for short) you can list any mix of:
 
 | Exclude | Example |
 |---|---|
-| A date | **26.09.14**, **next wed** |
+| A date | **26.09.14**, **next wed**, **christmas**, **easter 2030** |
 | A range of dates | **05.10.14 to 10.10.14** |
 | Weekends or weekdays | **weekends** or **wknd**, **weekdays** or **wkdy** |
 | A day of the week | **tuesdays** or **tue** |
@@ -1121,7 +1121,7 @@ Each list marks the current choice with a \*.
 
 The same three settings are in Alfred Preferences: open the workflow and click _Configure Workflow_. Changing a setting in either place changes it in both.
 
-I’d recommend the 24-hour format. It’s easier to type, because 12-hour times need AM and PM in capitals.
+12-hour times can be typed in either case, and without minutes on the hour: **4pm**, **4:30PM**.
 
 ### Natural language
 Surround a simple expression in double quotes, and something quite magical happens:
@@ -1139,6 +1139,8 @@ Yup! A natural date language parser! You can even combine it with the usual synt
 This is a little bit experimental, but I thought I’d throw it in for a bit of fun.
 
 Every word has to be one the parser understands. If one isn’t, you get _Invalid Date/time_ rather than a guess, so **dcalc "3 days after christmas"** doesn’t quietly turn into 3 days from today.
+
+Quoted phrases follow the parser’s own rules, so **"next friday"** is the Friday of next week, while **next fri** without quotes, like **"friday"**, is the coming one.
 
 ### Troubleshooting
 - **No result for an expression you’re sure is right:** check the [settings](#settings). Dates have to be typed in the chosen format, so _25.12.14_ won’t work when the format is _mm/dd/yyyy_.

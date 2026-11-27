@@ -145,6 +145,9 @@ assert dcalc('27.11.26 - 1d x 01.01.25 to 26.11.26') == '31.12.24'
 assert dcalc('26.11.26 + 1d x 27.11.26 to 30.12.27') == '31.12.27'
 assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == "error: That's too far away"
 
+# Exclusions take names too, as the README says
+assert dcalc('24.12.26 + 1d x christmas') == '26.12.26'
+
 # The exclude keyword is a whole word: "xmon" without it isn't read as "x mon" (exclude Mondays)
 assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
