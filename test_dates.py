@@ -180,6 +180,8 @@ assert dcalc('26.11.26 + 5 dayz') == 'error: Invalid Command'
 
 assert (dcalc('25.12.14 doy'), dcalc('31.12.24 doy'), dcalc('01.02.26 doy')) == ('359', '366', '32')
 
+assert (dcalc('25.12.14 animal'), dcalc('01.06.20 animal'), dcalc('31.12.31 animal')) == ('Horse', 'Rat', 'Pig')
+
 # The moon is new at a solar eclipse and full at a lunar one
 assert (dcalc('08.04.24 moon'), dcalc('14.03.25 moon')) == ('🌑 New moon', '🌕 Full moon')
 assert dcalc('25.12.14 moon') == '🌒 Waxing crescent'

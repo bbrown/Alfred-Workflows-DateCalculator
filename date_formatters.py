@@ -41,6 +41,15 @@ def zodiac_sign(date_time):
     return signs[bisect(signs, (date_time.month, date_time.day))][2]
 
 
+CHINESE_ZODIAC = ('Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig')
+
+
+def chinese_zodiac(date_time):
+    # shortcut: goes by the calendar year, so a date in January or February before Chinese New Year gets the
+    # animal of the year about to start; use a table of new year dates if that matters
+    return CHINESE_ZODIAC[(date_time.year - 2020) % 12]  # 2020 was a year of the Rat
+
+
 LUNAR_MONTH = 29.530588853  # days, on average
 MOON_PHASES = ('🌑 New moon', '🌒 Waxing crescent', '🌓 First quarter', '🌔 Waxing gibbous',
                '🌕 Full moon', '🌖 Waning gibbous', '🌗 Last quarter', '🌘 Waning crescent')
@@ -72,6 +81,7 @@ DATE_FORMATTERS_MAP = {
     "iso": iso_format,
     "unix": unix_time,
     "sign": zodiac_sign,
+    "animal": chinese_zodiac,
     "moon": moon_phase,
     "progress": year_progress
 }

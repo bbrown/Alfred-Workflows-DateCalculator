@@ -167,6 +167,7 @@ Put one of these after a date to find out something about it instead:
 | **iso** | The date and time in ISO 8601 format | **dcalc now iso** | |
 | **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
 | **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
+| **animal** | The Chinese zodiac animal, going by the calendar year, so a date in January or February before Chinese New Year gets the next year’s | **dcalc 25.12.14 animal** | _Horse_ |
 | **moon** | The phase of the moon, give or take a day | **dcalc 25.12.14 moon** | _🌒 Waxing crescent_ |
 | **progress** | How much of the year has gone | **dcalc 01.07.14 progress** | _▓▓▓▓░░░░░░ 49%_ |
 
