@@ -180,6 +180,10 @@ assert dcalc('26.11.26 + 5 dayz') == 'error: Invalid Command'
 
 assert (dcalc('25.12.14 doy'), dcalc('31.12.24 doy'), dcalc('01.02.26 doy')) == ('359', '366', '32')
 
+# zodiac is another name for sign, and works after the short forms, like every option
+assert dcalc('25.12.14 zodiac') == dcalc('25.12.14 sign') == 'Capricorn'
+assert (dcalc('*zodiac'), dcalc('> zodiac'), dcalc('# zodiac')) == (dcalc('today sign'), dcalc('tomorrow sign'),
+                                                                   dcalc('now sign'))
 assert (dcalc('25.12.14 animal'), dcalc('01.06.20 animal'), dcalc('31.12.31 animal')) == ('Horse', 'Rat', 'Pig')
 
 # The moon is new at a solar eclipse and full at a lunar one

@@ -81,6 +81,7 @@ DATE_FORMATTERS_MAP = {
     "iso": iso_format,
     "unix": unix_time,
     "sign": zodiac_sign,
+    "zodiac": zodiac_sign,
     "animal": chinese_zodiac,
     "moon": moon_phase,
     "progress": year_progress

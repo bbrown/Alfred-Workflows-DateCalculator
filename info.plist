@@ -1018,12 +1018,12 @@ Put one of these after a date to find out something about it instead:
 | **doy** | The day of the year, 1 January being 1 | **dcalc 25.12.14 doy** | _359_ |
 | **iso** | The date and time in ISO 8601 format | **dcalc now iso** | |
 | **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
-| **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
+| **sign** or **zodiac** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
 | **animal** | The Chinese zodiac animal, going by the calendar year, so a date in January or February before Chinese New Year gets the next year’s | **dcalc 25.12.14 animal** | _Horse_ |
 | **moon** | The phase of the moon, give or take a day | **dcalc 25.12.14 moon** | _🌒 Waxing crescent_ |
 | **progress** | How much of the year has gone | **dcalc 01.07.14 progress** | _▓▓▓▓░░░░░░ 49%_ |
 
-These work after a calculation, too: **dcalc today + 100d wd**.
+These work after a calculation, too: **dcalc today + 100d wd**. And after the short forms: **dcalc \* zodiac** is today’s star sign.
 
 **wn** also works the other way round, finding the date for a week number:
 
