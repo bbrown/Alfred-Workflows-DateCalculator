@@ -1,5 +1,5 @@
 import sys
-from datetime import timedelta
+from datetime import date, timedelta
 
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, UNITS, MAX_LOOKAHEAD_DAYS
 from date_formatters import DATE_FORMATTERS_MAP
@@ -28,7 +28,19 @@ def delta_arithmetic(date_time, operand):
     return date_time
 
 
+def describe(date_time):
+    """The subtitle for a date answer: its weekday, ISO week and how far away it is, as in
+
+    Friday · week 52 · in 29 days
+    """
+    days = (date_time.date() - date.today()).days
+    when = {0: 'today', 1: 'tomorrow', -1: 'yesterday'}.get(days) or \
+        ('in {:,} days' if days > 0 else '{:,} days ago').format(abs(days))
+    return '%s · week %d · %s' % (date_time.strftime('%A'), date_time.isocalendar()[1], when)
+
+
 def do_timespans(command, settings):
+    """The answer and its subtitle."""
     date_time, output_format = convert_date_time(command.dateTime, settings)
     original_date_time = date_time
 
@@ -38,10 +50,10 @@ def do_timespans(command, settings):
     date_time = exclusion_check(original_date_time, date_time, command, settings)
 
     if hasattr(command, "dateFormat"):
-        return DATE_FORMATTERS_MAP[command.dateFormat.lower()](date_time)
+        return DATE_FORMATTERS_MAP[command.dateFormat.lower()](date_time), "Copy to clipboard"
     if output_format == get_time_format(settings) and date_time.date() != original_date_time.date():
         output_format = get_full_format(settings)  # a time alone would hide that the answer is on another day
-    return date_time.strftime(output_format)
+    return date_time.strftime(output_format), describe(date_time)
 
 
 def do_subtraction(command, settings):
@@ -169,9 +181,9 @@ def main(wf):
         command = DateParser(wf.settings).parse_command(query)
 
         if hasattr(command, "dateTime"):
-            output = do_timespans(command, wf.settings)
+            output, subtitle = do_timespans(command, wf.settings)
         else:
-            output = do_subtraction(command, wf.settings)
+            output, subtitle = do_subtraction(command, wf.settings), "Copy to clipboard"
 
     except SyntaxError:
         error = "Invalid Command"
@@ -185,7 +197,7 @@ def main(wf):
     if error:
         wf.add_item(title=". . .", subtitle=error, valid=False, arg=query, icon=ICON_ERROR)
     else:
-        wf.add_item(title=output, subtitle="Copy to clipboard", valid=True, arg=output)
+        wf.add_item(title=output, subtitle=subtitle, valid=True, arg=output)
 
     wf.send_feedback()
 

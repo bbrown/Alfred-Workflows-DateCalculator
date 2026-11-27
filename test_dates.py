@@ -195,6 +195,13 @@ assert dcalc('01.01.26 progress') == '░░░░░░░░░░ 0%'
 assert dcalc('01.07.26 progress') == '▓▓▓▓░░░░░░ 49%'
 assert dcalc('31.12.26@23:59 progress') == '▓▓▓▓▓▓▓▓▓░ 99%'
 
+# A date answer's subtitle gives its weekday, week number and how far away it is
+midnight = datetime.combine(date.today(), datetime.min.time())
+assert date_calculator.describe(datetime(2026, 12, 25)).startswith('Friday · week 52 · ')
+assert date_calculator.describe(midnight).endswith(' · today')
+assert date_calculator.describe(midnight + timedelta(days=29, hours=5)).endswith(' · in 29 days')
+assert date_calculator.describe(midnight - timedelta(days=1000)).endswith(' · 1,000 days ago')
+
 # Unix times, read with @ and shown with unix, in local time
 assert dcalc('@1795689600 unix') == '1795689600'
 assert dcalc('@0 + 1d unix') == '86400'
