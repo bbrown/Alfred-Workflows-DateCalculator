@@ -91,6 +91,9 @@ def convert_date_time(date_time, settings):
     if date_time.startswith('"'):
         return natural_parser(date_time, settings)
 
+    if date_time.startswith('@'):  # a Unix time, in local time
+        return datetime.fromtimestamp(int(date_time[1:])), full_format
+
     #How about a date from a week number and a year
     if date_time.startswith("wn"):
         return datetime.combine(get_date_from_week_number(date_time), datetime.min.time()), date_format

@@ -22,6 +22,10 @@ def iso_format(date_time):
     return date_time.isoformat(timespec='seconds')
 
 
+def unix_time(date_time):
+    return str(int(date_time.timestamp()))
+
+
 # Just for a laugh we'll add a function to find the star sign
 # for a given date
 def zodiac_sign(date_time):
@@ -41,5 +45,6 @@ DATE_FORMATTERS_MAP = {
     "wd": week_day,
     "!": week_number,
     "iso": iso_format,
+    "unix": unix_time,
     "sign": zodiac_sign
 }

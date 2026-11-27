@@ -924,6 +924,8 @@ Anywhere a date or time can go, you can use any of these.
 
 So **dcalc \*+6d** is the date six days from now.
 
+**Unix times.** Put **@** in front of a Unix time, as in **dcalc @1795689600**, for that date and time where you are.
+
 **Days of the week.** **next mon** to **next sun** give the coming Monday to Sunday, and **prev mon** to **prev sun** give the last one. On a Tuesday, **next tue** is a week away.
 
 **Named dates.** Each of these gives the next one to come:
@@ -1014,6 +1016,7 @@ Put one of these after a date to find out something about it instead:
 | **wd** | The day of the week | **dcalc 25.12.14 wd** | _THU_ |
 | **wdi** | The day of the week as a number, Monday being 1 | **dcalc 25.12.14 wdi** | _4_ |
 | **iso** | The date and time in ISO 8601 format | **dcalc now iso** | |
+| **unix** | The Unix time: seconds since the start of 1970, UTC | **dcalc now unix** | |
 | **sign** | The star sign, just for a laugh | **dcalc 25.12.14 sign** | _Capricorn_ |
 
 These work after a calculation, too: **dcalc today + 100d wd**.

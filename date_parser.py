@@ -37,6 +37,9 @@ class DateParser:
         # The money shot
         self.parseable_date_re = re.compile(r'\"[^\"]+\"', re.IGNORECASE)
 
+        # A Unix time, as GNU date writes it. Up to 12 digits, so a timestamp in milliseconds is an invalid command.
+        self.unix_time_re = re.compile(r'@\d{1,12}(?!\d)')
+
         # Week number calculation
         self.wn_command_re = WN_FUNCTION_REGEX
 
@@ -102,7 +105,7 @@ class DateParser:
 
         class DateTime(str):
             grammar = [self.date_time_re, self.date_re, self.time_re, self.date_functions_re, self.user_macros_re,
-                       self.parseable_date_re, self.wn_command_re]
+                       self.parseable_date_re, self.wn_command_re, self.unix_time_re]
 
         class Format(str):
             grammar = optional(self.format_re)

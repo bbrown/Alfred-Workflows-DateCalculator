@@ -170,6 +170,12 @@ assert dcalc('30.11.26 - 27.11.26 x weekends') == '1 day'
 assert dcalc('27.11.26 - 28.11.26 x weekends') == '0 days'
 assert dcalc('24.12.26 - 26.11.26 x weekends w') == 'error: Invalid Command'  # the answer is always days
 
+# Unix times, read with @ and shown with unix, in local time
+assert dcalc('@1795689600 unix') == '1795689600'
+assert dcalc('@0 + 1d unix') == '86400'
+assert dcalc('@1795689600 - @1795603200') == '1 day'
+assert dcalc('@1795689600000') == 'error: Invalid Command'  # milliseconds
+
 # A time answer that lands on another day shows the date too
 assert dcalc('09:00 + 2h') == '11:00'
 assert dcalc('23:00 + 2h') == (date.today() + timedelta(days=1)).strftime('%d.%m.%y@01:00')
