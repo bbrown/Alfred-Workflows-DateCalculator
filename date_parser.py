@@ -23,7 +23,9 @@ class DateParser:
         self.date_functions_re = re.compile(self._get_date_functions(), re.IGNORECASE)
         self.user_macros_re = re.compile(self._get_anniversaries(self.settings), re.IGNORECASE)
         self.operator_re = re.compile(r'[+-]')
-        self.time_span_re = re.compile(r'[ymwdhMs]')
+        # a unit's letter, or a word for it in any case, such as "min" or "days"
+        self.time_span_re = re.compile(r'(?i:years?|yrs?|months?|mos?|weeks?|wks?|days?|hours?|hrs?|minutes?|mins?|'
+                                       r'seconds?|secs?)(?![a-z])|[ymwdhMs]')
         self.time_digits_re = re.compile(r'[0-9]+')
         self.format_re = re.compile(r'[ymwdhMs]+|long')
         self.date_formatters_re = re.compile(self._get_date_formatters(), re.IGNORECASE)

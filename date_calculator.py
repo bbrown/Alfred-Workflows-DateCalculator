@@ -14,10 +14,17 @@ class CalculationError(Exception):
     """Its message is the answer to show, such as "All days excluded"."""
 
 
+def unit_name(span):
+    """The unit a time span names: its letter (m is months, M minutes) or a word such as "min" or "days"."""
+    if len(span) > 1:
+        span = 'M' if span[:2].lower() == 'mi' else span[0].lower()
+    return UNITS[span]
+
+
 def delta_arithmetic(date_time, operand):
     sign = 1 if operand.operator == "+" else -1
     for timespan in operand.timeSpans:
-        date_time += relativedelta(**{UNITS[timespan.span] + 's': sign * int(timespan.amount)})
+        date_time += relativedelta(**{unit_name(timespan.span) + 's': sign * int(timespan.amount)})
     return date_time
 
 

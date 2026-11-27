@@ -170,6 +170,14 @@ assert dcalc('30.11.26 - 27.11.26 x weekends') == '1 day'
 assert dcalc('27.11.26 - 28.11.26 x weekends') == '0 days'
 assert dcalc('24.12.26 - 26.11.26 x weekends w') == 'error: Invalid Command'  # the answer is always days
 
+# Units can be words, in any case: "min" and "mo" can't be mixed up the way M and m can
+assert dcalc('09:00 + 30min') == '09:30'
+assert dcalc('09:00 + 1 hour 30 Mins') == '10:30'
+assert dcalc('26.11.26 + 2 weeks 1 day') == '11.12.26'
+assert dcalc('26.11.26 + 1mo') == dcalc('26.11.26 + 1m') == '26.12.26'
+assert dcalc('26.11.26 + 5 days x weekends') == dcalc('26.11.26 + 5d x weekends') == '03.12.26'
+assert dcalc('26.11.26 + 5 dayz') == 'error: Invalid Command'
+
 # Unix times, read with @ and shown with unix, in local time
 assert dcalc('@1795689600 unix') == '1795689600'
 assert dcalc('@0 + 1d unix') == '86400'

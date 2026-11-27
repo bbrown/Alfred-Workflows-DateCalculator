@@ -114,17 +114,17 @@ A time that goes past midnight gets its date as well, so **dcalc 23:00 + 2h** gi
 
 The units are:
 
-| Unit | Means |
-|---|---|
-| **y** | years |
-| **m** | months |
-| **w** | weeks |
-| **d** | days |
-| **h** | hours |
-| **M** | minutes |
-| **s** | seconds |
+| Unit | Or the word | Means |
+|---|---|---|
+| **y** | **year**, **yr** | years |
+| **m** | **month**, **mo** | months |
+| **w** | **week**, **wk** | weeks |
+| **d** | **day** | days |
+| **h** | **hour**, **hr** | hours |
+| **M** | **minute**, **min** | minutes |
+| **s** | **second**, **sec** | seconds |
 
-Note the capital **M** for minutes. Odd, I know, but the workflow has to tell it apart from **m** for months, and I figured minutes would see much less use. (They have for me.)
+Note the capital **M** for minutes. Odd, I know, but the workflow has to tell it apart from **m** for months, and I figured minutes would see much less use. (They have for me.) If you can never remember which is which, use the words: **dcalc time + 30min**, **dcalc today + 2 weeks 1 day**. They can be plural or not, in any case, with or without a space.
 
 You can chain as many as you like:
 
@@ -151,7 +151,7 @@ Add units at the end to choose how the answer is shown. With one unit you get a 
 | **dcalc 25.12.14 - 18.01.14 ymwd** | _0 years, 11 months, 1 week, 0 days_ |
 | **dcalc 25.12.14 - 18.01.14 long** | _0 years, 11 months, 7 days, 0 hours, 0 minutes, 0 seconds_ |
 
-You can use any of the [units](#adding-and-subtracting), in any order. Without units, the answer leaves out anything that’s zero, and seconds. Personally, I always use _long_ because it’s the most precise.
+You can use the letters of any of the [units](#adding-and-subtracting), in any order. Without units, the answer leaves out anything that’s zero, and seconds. Personally, I always use _long_ because it’s the most precise.
 
 To count only working days, add [exclusions](#exclusions).
 
