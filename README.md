@@ -102,6 +102,8 @@ Add or take away amounts of time with **+** and **-**:
 
 **dcalc 14:35 + 6h**
 
+A time that goes past midnight gets its date as well, so **dcalc 23:00 + 2h** gives something like _27.11.26@01:00_.
+
 The units are:
 
 | Unit | Means |

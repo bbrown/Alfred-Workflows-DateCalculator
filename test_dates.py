@@ -149,6 +149,11 @@ assert dcalc('26.11.2026 + 1d x 27.11.2026 to 31.12.2200', four_digit_years) == 
 assert dcalc('24.11.26 + 5d xmon') == 'error: Invalid Command'
 assert dcalc('24.11.26 + 5d x xmon') == '28.12.26'
 
+# A time answer that lands on another day shows the date too
+assert dcalc('09:00 + 2h') == '11:00'
+assert dcalc('23:00 + 2h') == (date.today() + timedelta(days=1)).strftime('%d.%m.%y@01:00')
+assert dcalc('01:00 - 2h') == (date.today() - timedelta(days=1)).strftime('%d.%m.%y@23:00')
+
 # A quoted phrase with a word the parser doesn't know is an error, not a guess that leaves the word out
 for phrase in ('3 days after christmas', 'first monday of next month', 'last day of the month', 'day after tomorrow'):
     assert dcalc('"%s"' % phrase) == 'error: Invalid Date/time', phrase

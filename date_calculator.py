@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from date_format_mappings import DEFAULT_WORKFLOW_SETTINGS, UNITS, MAX_LOOKAHEAD_DAYS
 from date_formatters import DATE_FORMATTERS_MAP
-from date_functions import EXCLUSION_MAP
+from date_functions import EXCLUSION_MAP, get_time_format, get_full_format
 from date_parser import DateParser
 from dateutil.relativedelta import relativedelta
 from utils import convert_date_time
@@ -32,6 +32,8 @@ def do_timespans(command, settings):
 
     if hasattr(command, "dateFormat"):
         return DATE_FORMATTERS_MAP[command.dateFormat.lower()](date_time)
+    if output_format == get_time_format(settings) and date_time.date() != original_date_time.date():
+        output_format = get_full_format(settings)  # a time alone would hide that the answer is on another day
     return date_time.strftime(output_format)
 
 
