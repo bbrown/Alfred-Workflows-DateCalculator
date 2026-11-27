@@ -34,19 +34,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>325B8F31-17CE-427F-ABB6-9D77B34CE8B7</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>56D0C077-A984-4BCD-B4B7-BF789A8C69FB</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>6344C161-C077-4BB5-800B-6BCF7A98F450</key>
 		<array>
 			<dict>
@@ -636,50 +623,6 @@ end run</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>tell application id "com.runningwithcrayons.Alfred" to search "dcalc date"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>6</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>56D0C077-A984-4BCD-B4B7-BF789A8C69FB</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>date</string>
-				<key>subtext</key>
-				<string>Show the current date</string>
-				<key>text</key>
-				<string>Current Date</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>325B8F31-17CE-427F-ABB6-9D77B34CE8B7</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -956,8 +899,6 @@ Type **dcalc** followed by an expression. The examples below use the default dat
 | **dcalc easter** | Next Easter Sunday |
 
 The workflow reads the expression as you type, so you’ll see _. . ._ or messages such as _Invalid Command_ until it’s complete. Then it shows the result. Press Enter to copy the result and paste it into the app you were using.
-
-Typing **date** on its own is a shortcut for **dcalc date**.
 
 ### Dates, times and names
 Anywhere a date or time can go, you can use any of these.
@@ -1300,13 +1241,6 @@ THE SOFTWARE.
 			<key>ypos</key>
 			<real>530</real>
 		</dict>
-		<key>325B8F31-17CE-427F-ABB6-9D77B34CE8B7</key>
-		<dict>
-			<key>xpos</key>
-			<integer>300</integer>
-			<key>ypos</key>
-			<real>1280</real>
-		</dict>
 		<key>42E3993D-0D36-40CD-89F8-562E443F4BCF</key>
 		<dict>
 			<key>xpos</key>
@@ -1334,13 +1268,6 @@ THE SOFTWARE.
 			<integer>500</integer>
 			<key>ypos</key>
 			<real>920</real>
-		</dict>
-		<key>56D0C077-A984-4BCD-B4B7-BF789A8C69FB</key>
-		<dict>
-			<key>xpos</key>
-			<integer>500</integer>
-			<key>ypos</key>
-			<real>1280</real>
 		</dict>
 		<key>6344C161-C077-4BB5-800B-6BCF7A98F450</key>
 		<dict>

@@ -48,8 +48,6 @@ Type **dcalc** followed by an expression. The examples below use the default dat
 
 The workflow reads the expression as you type, so you’ll see _. . ._ or messages such as _Invalid Command_ until it’s complete. Then it shows the result. Press Enter to copy the result and paste it into the app you were using.
 
-Typing **date** on its own is a shortcut for **dcalc date**.
-
 ### Dates, times and names
 Anywhere a date or time can go, you can use any of these.
 
